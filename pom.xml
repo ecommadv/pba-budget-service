@@ -6,7 +6,7 @@
         <artifactId>PBA</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>BudgetService</artifactId>
+    <artifactId>pba-budget-service</artifactId>
     <name>Archetype - BudgetService</name>
     <url>http://maven.apache.org</url>
     <dependencies>
