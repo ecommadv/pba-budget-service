@@ -5,12 +5,9 @@ import com.PBA.budgetservice.persistance.model.Income;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.data.mapping.context.MappingContext;
-import org.springframework.data.util.Pair;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Mapper
 public interface IncomeDtoMapper {
@@ -25,11 +22,13 @@ public interface IncomeDtoMapper {
 
     public Account toAccount(IncomeRequest incomeRequest);
 
-    @Mapping(target = "userUid", expression = "java(mappingContext.getFirst().get(income.getAccountId()))")
-    @Mapping(target = "categoryUid", expression = "java(mappingContext.getSecond().get(income.getCategoryId()))")
-    public IncomeResponse toIncomeResponse(Income income,
-                                           @Context Pair<Map<Long, UUID>, Map<Long, UUID>> mappingContext);
+    @Mapping(target = "categoryName", expression = "java(categoryIdToNameMapping.get(income.getCategoryId()))")
+    public IncomeDto toIncomeResponse(Income income,
+                                      @Context Map<Long, String> categoryIdToNameMapping);
 
-    public List<IncomeResponse> toIncomeResponse(List<Income> incomes,
-                                                 @Context Pair<Map<Long, UUID>, Map<Long, UUID>> mappingContext);
+    @Mapping(target = "categoryName", expression = "java(categoryName)")
+    public IncomeDto toIncomeResponse(Income income, String categoryName);
+
+    public List<IncomeDto> toIncomeResponse(List<Income> incomes,
+                                            @Context Map<Long, String> categoryIdToNameMapping);
 }

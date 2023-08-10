@@ -3,3 +3,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/budgettest
     username: postgres
     password: larlarlar
+server:
+  servlet:
+    context-path: "/api"

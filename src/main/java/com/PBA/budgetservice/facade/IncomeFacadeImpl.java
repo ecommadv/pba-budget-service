@@ -3,14 +3,13 @@ package com.PBA.budgetservice.facade;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDtoMapper;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeResponse;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeUpdateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeService;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public void addIncome(IncomeRequest incomeRequest) {
+    public IncomeDto addIncome(IncomeRequest incomeRequest) {
         Account account = incomeDtoMapper.toAccount(incomeRequest);
         Income income = incomeDtoMapper.toIncome(incomeRequest);
 
@@ -42,21 +41,29 @@ public class IncomeFacadeImpl implements IncomeFacade {
         IncomeCategory incomeCategory = incomeCategoryService.getIncomeCategoryByUid(incomeRequest.getCategoryUid());
         income.setCategoryId(incomeCategory.getId());
 
-        incomeService.addIncome(income);
+        Income savedIncome = incomeService.addIncome(income);
+        return incomeDtoMapper.toIncomeResponse(savedIncome, incomeCategory.getName());
     }
 
     @Override
-    public List<IncomeResponse> getAllIncomes() {
-        Map<Long, UUID> accountIdToUserUidMapping = accountService.getAccountIdToUserUidMapping();
-        Map<Long, UUID> incomeCategoryIdToUidMapping = incomeCategoryService.getIncomeCategoryIdToUidMapping();
+    public List<IncomeDto> getAllIncomes() {
+        Map<Long, String> incomeCategoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeDtoMapper.toIncomeResponse(incomeService.getAllIncomes(),
-                                                Pair.of(accountIdToUserUidMapping, incomeCategoryIdToUidMapping));
+                                                incomeCategoryIdToNameMapping);
     }
 
     @Override
-    public void updateIncome(IncomeUpdateRequest incomeUpdateRequest) {
-        Income incomeToUpdate = incomeService.getIncomeByUid(incomeUpdateRequest.getUid());
+    public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid) {
+        Income incomeToUpdate = incomeService.getIncomeByUid(uid);
+        IncomeCategory currentIncomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToUpdate.getCategoryId());
+
+        UUID categoryUid = incomeUpdateRequest.getCategoryUid() == null ? currentIncomeCategory.getUid() : incomeUpdateRequest.getCategoryUid();
+        IncomeCategory incomeCategory = incomeCategoryService.getIncomeCategoryByUid(categoryUid);
+        incomeToUpdate.setCategoryId(incomeCategory.getId());
+
         Income updatedIncome = incomeDtoMapper.toIncome(incomeUpdateRequest, incomeToUpdate);
         incomeService.updateIncome(updatedIncome);
+
+        return incomeDtoMapper.toIncomeResponse(updatedIncome, incomeCategory.getName());
     }
 }

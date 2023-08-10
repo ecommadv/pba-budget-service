@@ -12,11 +12,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class IncomeResponse {
+public class IncomeDto {
     private BigDecimal amount;
     private String description;
     private String currency;
     private UUID uid;
-    private UUID userUid;
-    private UUID categoryUid;
+    private String categoryName;
 }

@@ -5,3 +5,6 @@ spring:
     username: postgres
     password: larlarlar
     driverClassName: org.postgresql.Driver
+server:
+  servlet:
+    context-path: "/api"

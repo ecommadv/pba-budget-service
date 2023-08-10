@@ -4,6 +4,7 @@ import com.PBA.budgetservice.facade.IncomeFacadeImpl;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDtoMapper;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
 import com.PBA.budgetservice.service.AccountService;
@@ -12,6 +13,7 @@ import com.PBA.budgetservice.service.IncomeService;
 import mockgenerators.AccountMockGenerator;
 import mockgenerators.IncomeCategoryMockGenerator;
 import mockgenerators.IncomeMockGenerator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,20 +50,18 @@ public class IncomeFacadeUnitTest {
         Income income = IncomeMockGenerator.generateMockIncome(incomeCategories, accountList);
         Account account = AccountMockGenerator.generateMockAccount();
         IncomeCategory incomeCategory = IncomeCategoryMockGenerator.generateMockIncomeCategory();
+        IncomeDto incomeResponse = IncomeDto.builder().build();
         when(incomeDtoMapper.toIncome(incomeRequest)).thenReturn(income);
         when(incomeDtoMapper.toAccount(incomeRequest)).thenReturn(account);
         when(accountService.addAccount(account)).thenReturn(account);
         when(incomeCategoryService.getIncomeCategoryByUid(incomeRequest.getCategoryUid())).thenReturn(incomeCategory);
+        when(incomeService.addIncome(income)).thenReturn(income);
+        when(incomeDtoMapper.toIncomeResponse(income, incomeCategory.getName())).thenReturn(incomeResponse);
 
         // when
-        incomeFacade.addIncome(incomeRequest);
+        IncomeDto result = incomeFacade.addIncome(incomeRequest);
 
         // then
-        verify(incomeDtoMapper).toIncome(incomeRequest);
-        verify(incomeDtoMapper).toAccount(incomeRequest);
-        verify(accountService).addAccount(account);
-        verify(incomeService).addIncome(income);
-        verify(incomeCategoryService).getIncomeCategoryByUid(incomeRequest.getCategoryUid());
-        verifyNoMoreInteractions(incomeDtoMapper, incomeService, accountService, incomeCategoryService);
+        Assertions.assertEquals(incomeResponse, result);
     }
 }

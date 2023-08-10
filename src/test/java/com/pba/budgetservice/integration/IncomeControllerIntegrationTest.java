@@ -1,13 +1,11 @@
 package com.pba.budgetservice.integration;
 
 import com.PBA.budgetservice.persistance.model.Account;
-import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockgenerators.AccountMockGenerator;
 import mockgenerators.IncomeMockGenerator;
@@ -24,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-public class BudgetControllerIntegrationTest extends BaseControllerIntegrationTest {
+public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTest {
     @Autowired
     private IncomeDao incomeDao;
 
@@ -52,7 +50,7 @@ public class BudgetControllerIntegrationTest extends BaseControllerIntegrationTe
         IncomeRequest incomeRequest = IncomeMockGenerator.generateMockIncomeRequest(incomeCategoryList, accounts);
         String incomeRequestJSON = objectMapper.writeValueAsString(incomeRequest);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/budget/income")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/income")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(incomeRequestJSON)
                 ).andExpect(status().isCreated())

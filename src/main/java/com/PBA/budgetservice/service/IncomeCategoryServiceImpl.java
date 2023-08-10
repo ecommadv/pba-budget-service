@@ -25,9 +25,15 @@ public class IncomeCategoryServiceImpl implements IncomeCategoryService {
     }
 
     @Override
-    public Map<Long, UUID> getIncomeCategoryIdToUidMapping() {
+    public Map<Long, String> getIncomeCategoryIdToNameMapping() {
         return incomeCategoryDao.getAll()
                 .stream()
-                .collect(Collectors.toMap(IncomeCategory::getId, IncomeCategory::getUid));
+                .collect(Collectors.toMap(IncomeCategory::getId, IncomeCategory::getName));
+    }
+
+    @Override
+    public IncomeCategory getIncomeCategoryById(Long id) {
+        return incomeCategoryDao.getById(id)
+                .orElseThrow(() -> new BudgetServiceException(String.format("Income category with uid %d does not exist!", id)));
     }
 }

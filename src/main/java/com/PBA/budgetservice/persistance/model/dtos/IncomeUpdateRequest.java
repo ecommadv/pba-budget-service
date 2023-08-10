@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class IncomeUpdateRequest {
-    private UUID uid;
     private BigDecimal amount;
     private String description;
+    private UUID categoryUid;
 }

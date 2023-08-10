@@ -8,5 +8,6 @@ import java.util.Map;
 
 public interface IncomeCategoryService {
     public IncomeCategory getIncomeCategoryByUid(UUID uid);
-    public Map<Long, UUID> getIncomeCategoryIdToUidMapping();
+    public Map<Long, String> getIncomeCategoryIdToNameMapping();
+    public IncomeCategory getIncomeCategoryById(Long id);
 }

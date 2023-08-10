@@ -25,11 +25,4 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> savedAccount = accountDao.getByUserUidAndCurrency(Pair.of(account.getUserUid(), account.getCurrency()));
         return savedAccount.orElseGet(() -> accountDao.save(account));
     }
-
-    @Override
-    public Map<Long, UUID> getAccountIdToUserUidMapping() {
-        return accountDao.getAll()
-                .stream()
-                .collect(Collectors.toMap(Account::getId, Account::getUserUid));
-    }
 }
