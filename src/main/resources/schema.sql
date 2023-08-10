@@ -1,19 +1,21 @@
-CREATE TABLE IF NOT EXISTS account (
-    id SERIAL,
+CREATE DATABASE [IF NOT EXISTS] budget;
+
+CREATE TABLE [IF NOT EXISTS] account (
+    id bigint NOT NULL,
     user_uid uuid NOT NULL,
     currency character varying NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS expense_category (
-    id SERIAL,
+CREATE TABLE [IF NOT EXISTS] expense_category (
+    id bigint NOT NULL,
     name character varying NOT NULL,
     uid uuid NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS expense (
-    id SERIAL,
+CREATE TABLE [IF NOT EXISTS] expense (
+    id bigint NOT NULL,
     amount double precision NOT NULL,
     name character varying NOT NULL,
     description character varying NOT NULL,
@@ -30,15 +32,15 @@ CREATE TABLE IF NOT EXISTS expense (
             REFERENCES expense_category(id)
 );
 
-CREATE TABLE IF NOT EXISTS income_category (
-    id SERIAL,
+CREATE TABLE [IF NOT EXISTS] income_category (
+    id bigint NOT NULL,
     name character varying NOT NULL,
     uid uuid NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS income (
-    id SERIAL,
+CREATE TABLE [IF NOT EXISTS] income (
+    id bigint NOT NULL,
     amount double precision NOT NULL,
     description character varying NOT NULL,
     account_id bigint NOT NULL,
