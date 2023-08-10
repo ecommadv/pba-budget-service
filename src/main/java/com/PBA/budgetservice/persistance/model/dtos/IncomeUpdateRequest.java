@@ -1,4 +1,4 @@
-package com.PBA.budgetservice.persistance.model;
+package com.PBA.budgetservice.persistance.model.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Income {
-    private Long id;
+public class IncomeUpdateRequest {
+    private UUID uid;
     private BigDecimal amount;
     private String description;
-    private String currency;
-    private UUID uid;
-    private Long accountId;
-    private Long categoryId;
 }

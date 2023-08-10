@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -21,5 +24,12 @@ public class AccountServiceImpl implements AccountService {
     public Account addAccount(Account account) {
         Optional<Account> savedAccount = accountDao.getByUserUidAndCurrency(Pair.of(account.getUserUid(), account.getCurrency()));
         return savedAccount.orElseGet(() -> accountDao.save(account));
+    }
+
+    @Override
+    public Map<Long, UUID> getAccountIdToUserUidMapping() {
+        return accountDao.getAll()
+                .stream()
+                .collect(Collectors.toMap(Account::getId, Account::getUserUid));
     }
 }

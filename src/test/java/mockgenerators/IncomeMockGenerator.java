@@ -24,6 +24,7 @@ public class IncomeMockGenerator {
                 .amount(BigDecimal.valueOf(new Random().nextDouble()))
                 .description(UUID.randomUUID().toString())
                 .currency(getRandomCurrency())
+                .uid(UUID.randomUUID())
                 .accountId(incomeCategoryIdList.stream().findFirst().get())
                 .categoryId(accountIdList.stream().findFirst().get())
                 .build();

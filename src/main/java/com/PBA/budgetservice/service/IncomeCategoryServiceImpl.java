@@ -5,8 +5,10 @@ import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class IncomeCategoryServiceImpl implements IncomeCategoryService {
@@ -20,5 +22,12 @@ public class IncomeCategoryServiceImpl implements IncomeCategoryService {
     public IncomeCategory getIncomeCategoryByUid(UUID uid) {
         return incomeCategoryDao.getIncomeCategoryByUid(uid)
                 .orElseThrow(() -> new BudgetServiceException(String.format("Income category with uid %s does not exist!", uid.toString())));
+    }
+
+    @Override
+    public Map<Long, UUID> getIncomeCategoryIdToUidMapping() {
+        return incomeCategoryDao.getAll()
+                .stream()
+                .collect(Collectors.toMap(IncomeCategory::getId, IncomeCategory::getUid));
     }
 }

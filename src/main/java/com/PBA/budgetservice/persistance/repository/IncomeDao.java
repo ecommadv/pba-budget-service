@@ -5,6 +5,7 @@ import com.PBA.budgetservice.persistance.model.Income;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IncomeDao {
     public Income save(Income income);
@@ -12,4 +13,5 @@ public interface IncomeDao {
     public List<Income> getAll();
     public Income deleteById(Long id);
     public Income update(Income income, Long id);
+    public Optional<Income> getByUid(UUID uid);
 }

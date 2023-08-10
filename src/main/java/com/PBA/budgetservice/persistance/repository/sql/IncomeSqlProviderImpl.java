@@ -13,16 +13,17 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
                     amount,
                     description,
                     currency,
+                    uid,
                     account_id,
                     category_id
-                ) VALUES (DEFAULT, ?, ?, ?, ?, ?);
+                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?);
                 """;
     }
 
     @Override
     public String selectById() {
         return """
-                SELECT id, amount, description, currency, account_id, category_id
+                SELECT id, amount, description, currency, uid, account_id, category_id
                 FROM income
                 WHERE
                     id = ?
@@ -48,8 +49,18 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
     public String update() {
         return """
                 UPDATE income
-                SET amount = ?, description = ?, currency = ?, account_id = ?, category_id = ?
+                SET amount = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?
                 WHERE id = ?
                """;
+    }
+
+    @Override
+    public String selectByUid() {
+        return """
+                SELECT id, amount, description, currency, uid, account_id, category_id
+                FROM income
+                WHERE
+                    uid = ?
+                """;
     }
 }

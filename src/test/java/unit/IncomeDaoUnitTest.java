@@ -152,6 +152,7 @@ public class IncomeDaoUnitTest {
                 newIncome.getAmount(),
                 newIncome.getDescription(),
                 newIncome.getCurrency(),
+                newIncome.getUid(),
                 newIncome.getAccountId(),
                 newIncome.getCategoryId(),
                 newIncome.getId())).thenReturn(1);
@@ -176,6 +177,7 @@ public class IncomeDaoUnitTest {
                 absentIncome.getAmount(),
                 absentIncome.getDescription(),
                 absentIncome.getCurrency(),
+                absentIncome.getUid(),
                 absentIncome.getAccountId(),
                 absentIncome.getCategoryId(),
                 absentIncome.getId())).thenReturn(0);
