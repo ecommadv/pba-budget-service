@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS expense (
     description character varying NOT NULL,
     account_id bigint NOT NULL,
     category_id bigint NOT NULL,
+    currency character varying NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_account
         FOREIGN KEY (account_id)
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS income (
     description character varying NOT NULL,
     account_id bigint NOT NULL,
     category_id bigint NOT NULL,
+    currency character varying NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_account
         FOREIGN KEY (account_id)

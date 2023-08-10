@@ -1,25 +1,29 @@
 package com.PBA.budgetservice.persistance.repository.sql;
 
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountSqlProviderImpl implements AccountSqlProvider {
+public class IncomeSqlProviderImpl implements IncomeSqlProvider {
     @Override
     public String insert() {
         return """
-                INSERT INTO account (
+                INSERT INTO income (
                     id,
-                    user_uid,
-                    currency
-                ) VALUES (DEFAULT, ?, ?);
+                    amount,
+                    description,
+                    currency,
+                    account_id,
+                    category_id
+                ) VALUES (DEFAULT, ?, ?, ?, ?, ?);
                 """;
     }
 
     @Override
     public String selectById() {
         return """
-                SELECT id, user_uid, currency
-                FROM account
+                SELECT id, amount, description, currency, account_id, category_id
+                FROM income
                 WHERE
                     id = ?
                 """;
@@ -28,14 +32,14 @@ public class AccountSqlProviderImpl implements AccountSqlProvider {
     @Override
     public String selectAll() {
         return """
-               SELECT * FROM account
+               SELECT * FROM income
                """;
     }
 
     @Override
     public String deleteById() {
         return """
-                DELETE FROM account
+                DELETE FROM income
                 WHERE id = ?
                """;
     }
@@ -43,19 +47,9 @@ public class AccountSqlProviderImpl implements AccountSqlProvider {
     @Override
     public String update() {
         return """
-                UPDATE account
-                SET user_uid = ?, currency = ?
+                UPDATE income
+                SET amount = ?, description = ?, currency = ?, account_id = ?, category_id = ?
                 WHERE id = ?
                """;
-    }
-
-    @Override
-    public String selectByUserUidAndCurrency() {
-        return """
-                SELECT id, user_uid, currency
-                FROM account
-                WHERE
-                    user_uid = ? AND currency = ?
-                """;
     }
 }

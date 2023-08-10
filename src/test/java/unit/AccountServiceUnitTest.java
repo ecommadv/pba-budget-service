@@ -3,7 +3,6 @@ package unit;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.service.AccountServiceImpl;
-import com.PBA.budgetservice.validators.AccountValidator;
 import mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,9 +15,6 @@ public class AccountServiceUnitTest extends BaseUnitTest {
     private AccountServiceImpl accountService;
     @Mock
     private AccountDao accountDao;
-
-    @Mock
-    private AccountValidator accountValidator;
 
     @Test
     public void testAdd() {

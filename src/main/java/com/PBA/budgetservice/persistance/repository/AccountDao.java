@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.persistance.model.Account;
+import org.springframework.data.util.Pair;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -12,5 +13,6 @@ public interface AccountDao {
     public List<Account> getAll();
     public Account deleteById(Long id);
     public Account update(Account account, Long id);
+    public Optional<Account> getByUserUidAndCurrency(Pair<UUID, String> key);
 
 }

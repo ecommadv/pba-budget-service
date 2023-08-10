@@ -29,7 +29,7 @@ public abstract class JdbcRepository<ObjectT, IdT> {
 
     public ObjectT save(ObjectT obj) {
         String sql = sqlProvider.insert();
-        List<Object> attributes = AttributeExtractor.extractAttributes(obj);
+        List<Object> attributes = extractAttributes(obj);
         KeyHolder keyHolder = utilsFactory.keyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -69,7 +69,7 @@ public abstract class JdbcRepository<ObjectT, IdT> {
 
     public ObjectT update(ObjectT obj, IdT id) throws BudgetDaoException {
         String sql = sqlProvider.update();
-        List<Object> args = AttributeExtractor.extractAttributes(obj);
+        List<Object> args = extractAttributes(obj);
         args.add(id);
         int rowCount = jdbcTemplate.update(sql, args.toArray());
         if (rowCount == 0) {
@@ -78,22 +78,20 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         return obj;
     }
 
-    private static class AttributeExtractor {
-        private static List<Object> extractAttributes(Object obj) {
-            List<Field> fields = Arrays.stream(obj.getClass().getDeclaredFields()).toList();
-            fields.forEach((field) -> field.setAccessible(true));
-            return fields.stream()
-                    .map((field) -> getFieldValue(field, obj))
-                    .skip(1)
-                    .collect(Collectors.toList());
-        }
+    private List<Object> extractAttributes(Object obj) {
+        List<Field> fields = Arrays.stream(obj.getClass().getDeclaredFields()).toList();
+        fields.forEach((field) -> field.setAccessible(true));
+        return fields.stream()
+                .map((field) -> getFieldValue(field, obj))
+                .skip(1)
+                .collect(Collectors.toList());
+    }
 
-        private static Object getFieldValue(Field field, Object obj) {
-            try {
-                return field.get(obj);
-            } catch (IllegalAccessException e) {
-                throw new BudgetDaoException(e.getMessage());
-            }
+    private Object getFieldValue(Field field, Object obj) {
+        try {
+            return field.get(obj);
+        } catch (IllegalAccessException e) {
+            throw new BudgetDaoException(e.getMessage());
         }
-    };
+    }
 }

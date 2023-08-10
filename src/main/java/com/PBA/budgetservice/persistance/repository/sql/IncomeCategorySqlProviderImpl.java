@@ -3,14 +3,14 @@ package com.PBA.budgetservice.persistance.repository.sql;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountSqlProviderImpl implements AccountSqlProvider {
+public class IncomeCategorySqlProviderImpl implements IncomeCategorySqlProvider {
     @Override
     public String insert() {
         return """
-                INSERT INTO account (
+                INSERT INTO income_category (
                     id,
-                    user_uid,
-                    currency
+                    name,
+                    uid
                 ) VALUES (DEFAULT, ?, ?);
                 """;
     }
@@ -18,8 +18,8 @@ public class AccountSqlProviderImpl implements AccountSqlProvider {
     @Override
     public String selectById() {
         return """
-                SELECT id, user_uid, currency
-                FROM account
+                SELECT id, name, uid
+                FROM income_category
                 WHERE
                     id = ?
                 """;
@@ -28,14 +28,14 @@ public class AccountSqlProviderImpl implements AccountSqlProvider {
     @Override
     public String selectAll() {
         return """
-               SELECT * FROM account
+               SELECT * FROM income_category
                """;
     }
 
     @Override
     public String deleteById() {
         return """
-                DELETE FROM account
+                DELETE FROM income_category
                 WHERE id = ?
                """;
     }
@@ -43,19 +43,19 @@ public class AccountSqlProviderImpl implements AccountSqlProvider {
     @Override
     public String update() {
         return """
-                UPDATE account
-                SET user_uid = ?, currency = ?
+                UPDATE income_category
+                SET name = ?, uid = ?
                 WHERE id = ?
                """;
     }
 
     @Override
-    public String selectByUserUidAndCurrency() {
+    public String selectByUid() {
         return """
-                SELECT id, user_uid, currency
-                FROM account
+                SELECT id, name, uid
+                FROM income_category
                 WHERE
-                    user_uid = ? AND currency = ?
+                    uid = ?
                 """;
     }
 }
