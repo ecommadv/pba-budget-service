@@ -1,8 +1,8 @@
 package com.PBA.budgetservice.controller;
 
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeUpdateRequest;
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
+import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,29 +15,23 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/income")
 public interface IncomeController {
-    @Operation(summary = """
-            Creates an income and persists it in the system.
-            """)
+    @Operation(summary = "Creates an income and persists it in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created")
     })
     @PostMapping
     public ResponseEntity<IncomeDto> createIncome(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to create")
-            @RequestBody IncomeRequest incomeRequest);
+            @RequestBody IncomeCreateRequest incomeRequest);
 
-    @Operation(summary = """
-            Provides a list of all the incomes that are currently stored in the system.
-            """)
+    @Operation(summary = "Provides a list of all the incomes that are currently stored in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK")
     })
     @GetMapping
     public ResponseEntity<List<IncomeDto>> getAllIncomes();
 
-    @Operation(summary = """
-            Updates an income and persists the changes in the system.
-            """)
+    @Operation(summary = "Updates an income and persists the changes in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK")
     })

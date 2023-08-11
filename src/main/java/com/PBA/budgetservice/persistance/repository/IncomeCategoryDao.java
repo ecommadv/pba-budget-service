@@ -13,6 +13,5 @@ public interface IncomeCategoryDao {
     public List<IncomeCategory> getAll();
     public IncomeCategory deleteById(Long id);
     public IncomeCategory update(IncomeCategory incomeCategory, Long id);
-
     public Optional<IncomeCategory> getIncomeCategoryByUid(UUID uid);
 }

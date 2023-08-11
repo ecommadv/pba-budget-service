@@ -5,8 +5,8 @@ import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeDtoMapper;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
+import com.PBA.budgetservice.mapper.IncomeDtoMapper;
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeService;
@@ -46,7 +46,7 @@ public class IncomeFacadeUnitTest {
         // given
         List<Account> accountList = AccountMockGenerator.generateMockListOfAccounts(3);
         List<IncomeCategory> incomeCategories = IncomeCategoryMockGenerator.generateMockListOfIncomeCategories(3);
-        IncomeRequest incomeRequest = IncomeMockGenerator.generateMockIncomeRequest(incomeCategories, accountList);
+        IncomeCreateRequest incomeRequest = IncomeMockGenerator.generateMockIncomeRequest(incomeCategories, accountList);
         Income income = IncomeMockGenerator.generateMockIncome(incomeCategories, accountList);
         Account account = AccountMockGenerator.generateMockAccount();
         IncomeCategory incomeCategory = IncomeCategoryMockGenerator.generateMockIncomeCategory();

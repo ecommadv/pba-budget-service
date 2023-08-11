@@ -1,9 +1,10 @@
 package mockgenerators;
 
+import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -25,8 +26,8 @@ public class IncomeMockGenerator {
                 .description(UUID.randomUUID().toString())
                 .currency(getRandomCurrency())
                 .uid(UUID.randomUUID())
-                .accountId(incomeCategoryIdList.stream().findFirst().get())
-                .categoryId(accountIdList.stream().findFirst().get())
+                .accountId(accountIdList.stream().findFirst().get())
+                .categoryId(incomeCategoryIdList.stream().findFirst().get())
                 .build();
     }
 
@@ -39,7 +40,7 @@ public class IncomeMockGenerator {
                 .collect(Collectors.toList());
     }
 
-    public static IncomeRequest generateMockIncomeRequest(List<IncomeCategory> incomeCategories, List<Account> accounts) {
+    public static IncomeCreateRequest generateMockIncomeRequest(List<IncomeCategory> incomeCategories, List<Account> accounts) {
         if (incomeCategories.isEmpty() || accounts.isEmpty()) {
             return null;
         }
@@ -47,12 +48,34 @@ public class IncomeMockGenerator {
         Collections.shuffle(incomeCategoryUidList);
         List<UUID> accountUidList = accounts.stream().map(Account::getUserUid).collect(Collectors.toList());
         Collections.shuffle(accountUidList);
-        return IncomeRequest.builder()
+        return IncomeCreateRequest.builder()
                 .amount(BigDecimal.valueOf(new Random().nextDouble()))
                 .description(UUID.randomUUID().toString())
                 .currency(getRandomCurrency())
                 .userUid(accountUidList.stream().findFirst().get())
                 .categoryUid(incomeCategoryUidList.stream().findFirst().get())
+                .build();
+    }
+
+    public static List<IncomeCreateRequest> generateMockListOfIncomeRequests(List<IncomeCategory> incomeCategories, List<Account> accounts, int size) {
+        if (incomeCategories.isEmpty() || accounts.isEmpty()) {
+            return null;
+        }
+        return Stream.generate(() -> IncomeMockGenerator.generateMockIncomeRequest(incomeCategories, accounts))
+                .limit(size)
+                .collect(Collectors.toList());
+    }
+
+    public static IncomeUpdateRequest generateMockIncomeUpdateRequest(List<IncomeCategory> incomeCategories) {
+        if (incomeCategories.isEmpty()) {
+            return null;
+        }
+        List<UUID> incomeCategoryUids = incomeCategories.stream().map(IncomeCategory::getUid).collect(Collectors.toList());
+        Collections.shuffle(incomeCategoryUids);
+        return IncomeUpdateRequest.builder()
+                .amount(BigDecimal.valueOf(new Random().nextDouble()))
+                .description(UUID.randomUUID().toString())
+                .categoryUid(incomeCategoryUids.stream().findFirst().get())
                 .build();
     }
 

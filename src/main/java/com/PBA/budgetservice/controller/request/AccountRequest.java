@@ -1,4 +1,4 @@
-package com.PBA.budgetservice.persistance.model.dtos;
+package com.PBA.budgetservice.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

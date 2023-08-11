@@ -1,12 +1,12 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeDtoMapper;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeUpdateRequest;
+import com.PBA.budgetservice.mapper.IncomeDtoMapper;
+import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeService;
@@ -31,7 +31,7 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public IncomeDto addIncome(IncomeRequest incomeRequest) {
+    public IncomeDto addIncome(IncomeCreateRequest incomeRequest) {
         Account account = incomeDtoMapper.toAccount(incomeRequest);
         Income income = incomeDtoMapper.toIncome(incomeRequest);
 

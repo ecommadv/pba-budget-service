@@ -2,8 +2,8 @@ package com.PBA.budgetservice.controller;
 
 import com.PBA.budgetservice.facade.IncomeFacade;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeRequest;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeUpdateRequest;
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
+import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class IncomeControllerImpl implements IncomeController {
     }
 
     @Override
-    public ResponseEntity<IncomeDto> createIncome(IncomeRequest incomeRequest) {
+    public ResponseEntity<IncomeDto> createIncome(IncomeCreateRequest incomeRequest) {
         IncomeDto incomeResponse = incomeFacade.addIncome(incomeRequest);
         return new ResponseEntity<>(incomeResponse, HttpStatus.CREATED);
     }

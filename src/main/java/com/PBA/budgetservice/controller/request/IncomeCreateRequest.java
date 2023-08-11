@@ -1,4 +1,4 @@
-package com.PBA.budgetservice.persistance.model.dtos;
+package com.PBA.budgetservice.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class IncomeRequest {
+public class IncomeCreateRequest {
     private BigDecimal amount;
     private String description;
     private String currency;

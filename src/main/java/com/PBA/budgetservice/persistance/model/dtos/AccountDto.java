@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AccountResponse {
+public class AccountDto {
     private UUID userUid;
     private String currency;
 }
