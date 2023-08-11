@@ -39,4 +39,11 @@ public interface IncomeController {
     public ResponseEntity<IncomeDto> updateIncome(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to update")
             @RequestBody IncomeUpdateRequest incomeUpdateRequest, @PathVariable("uid") UUID uid);
+
+    @Operation(summary = "Deletes the income with the given uid from the system, if it exists.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    @DeleteMapping("/{uid}")
+    public ResponseEntity<IncomeDto> deleteIncome(@PathVariable("uid") UUID uid);
 }

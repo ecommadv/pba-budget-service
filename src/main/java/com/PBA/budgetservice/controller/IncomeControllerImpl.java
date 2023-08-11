@@ -22,19 +22,25 @@ public class IncomeControllerImpl implements IncomeController {
 
     @Override
     public ResponseEntity<IncomeDto> createIncome(IncomeCreateRequest incomeRequest) {
-        IncomeDto incomeResponse = incomeFacade.addIncome(incomeRequest);
-        return new ResponseEntity<>(incomeResponse, HttpStatus.CREATED);
+        IncomeDto incomeDto = incomeFacade.addIncome(incomeRequest);
+        return new ResponseEntity<>(incomeDto, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<List<IncomeDto>> getAllIncomes() {
-        List<IncomeDto> incomeResponses = incomeFacade.getAllIncomes();
-        return new ResponseEntity<>(incomeResponses, HttpStatus.OK);
+        List<IncomeDto> incomeDtos = incomeFacade.getAllIncomes();
+        return new ResponseEntity<>(incomeDtos, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<IncomeDto> updateIncome(IncomeUpdateRequest updateIncomeRequest, UUID uid) {
-        IncomeDto incomeResponse = incomeFacade.updateIncome(updateIncomeRequest, uid);
-        return new ResponseEntity<>(incomeResponse, HttpStatus.OK);
+        IncomeDto incomeDto = incomeFacade.updateIncome(updateIncomeRequest, uid);
+        return new ResponseEntity<>(incomeDto, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<IncomeDto> deleteIncome(UUID uid) {
+        IncomeDto incomeDto = incomeFacade.deleteIncomeByUid(uid);
+        return new ResponseEntity<>(incomeDto, HttpStatus.OK);
     }
 }

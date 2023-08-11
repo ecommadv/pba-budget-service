@@ -25,4 +25,9 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> savedAccount = accountDao.getByUserUidAndCurrency(Pair.of(account.getUserUid(), account.getCurrency()));
         return savedAccount.orElseGet(() -> accountDao.save(account));
     }
+
+    @Override
+    public Account deleteAccountById(Long id) {
+        return accountDao.deleteById(id);
+    }
 }

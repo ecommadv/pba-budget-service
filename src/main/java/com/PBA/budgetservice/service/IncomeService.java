@@ -9,4 +9,6 @@ public interface IncomeService {
     public List<Income> getAllIncomes();
     public Income getIncomeByUid(UUID uid);
     public Income updateIncome(Income income);
+    public Income deleteIncomeById(Long id);
+    public Income getIncomeById(Long id);
 }

@@ -115,6 +115,25 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         Assertions.assertEquals(incomeUpdateRequestCategory.getId(), updatedIncome.getCategoryId());
     }
 
+    @Test
+    public void testDeleteIncome() throws Exception {
+        List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
+        List<Account> accounts = AccountMockGenerator.generateMockListOfAccounts(5);
+        this.addMockAccounts(accounts);
+        Income income = IncomeMockGenerator.generateMockIncome(incomeCategoryList, accountDao.getAll());
+        Income savedIncome = incomeDao.save(income);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete(String.format("/income/%s", savedIncome.getUid().toString())))
+                .andExpect(status().isOk())
+                .andReturn();
+        String incomeDtoJSON = result.getResponse().getContentAsString();
+        IncomeDto incomeDto = objectMapper.readValue(incomeDtoJSON, IncomeDto.class);
+
+        Assertions.assertEquals(0, incomeDao.getAll().size());
+        Assertions.assertEquals(savedIncome.getUid(), incomeDto.getUid());
+        Assertions.assertFalse(accountDao.getById(savedIncome.getId()).isPresent());
+    }
+
     private void addMockAccounts(List<Account> accounts) {
         accounts.forEach(account -> accountDao.save(account));
     }
