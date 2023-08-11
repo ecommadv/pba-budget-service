@@ -1,7 +1,10 @@
 spring:
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/User
+    url: jdbc:postgresql://localhost:5432/budget
     username: postgres
     password: larlarlar
     driverClassName: org.postgresql.Driver
+server:
+  servlet:
+    context-path: "/api"
