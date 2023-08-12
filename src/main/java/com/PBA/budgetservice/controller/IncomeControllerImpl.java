@@ -39,8 +39,8 @@ public class IncomeControllerImpl implements IncomeController {
     }
 
     @Override
-    public ResponseEntity<IncomeDto> deleteIncome(UUID uid) {
-        IncomeDto incomeDto = incomeFacade.deleteIncomeByUid(uid);
-        return new ResponseEntity<>(incomeDto, HttpStatus.OK);
+    public ResponseEntity<Void> deleteIncome(UUID uid) {
+        incomeFacade.deleteIncomeByUid(uid);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

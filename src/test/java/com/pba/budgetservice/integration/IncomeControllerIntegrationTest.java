@@ -126,12 +126,9 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete(String.format("/income/%s", savedIncome.getUid().toString())))
                 .andExpect(status().isOk())
                 .andReturn();
-        String incomeDtoJSON = result.getResponse().getContentAsString();
-        IncomeDto incomeDto = objectMapper.readValue(incomeDtoJSON, IncomeDto.class);
 
         Assertions.assertEquals(0, incomeDao.getAll().size());
-        Assertions.assertEquals(savedIncome.getUid(), incomeDto.getUid());
-        Assertions.assertFalse(accountDao.getById(savedIncome.getId()).isPresent());
+        Assertions.assertFalse(incomeDao.getById(savedIncome.getId()).isPresent());
     }
 
     private void addMockAccounts(List<Account> accounts) {

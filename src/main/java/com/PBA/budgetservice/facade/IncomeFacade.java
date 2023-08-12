@@ -11,5 +11,5 @@ public interface IncomeFacade {
     public IncomeDto addIncome(IncomeCreateRequest incomeRequest);
     public List<IncomeDto> getAllIncomes();
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid);
-    public IncomeDto deleteIncomeByUid(UUID uid);
+    public void deleteIncomeByUid(UUID uid);
 }

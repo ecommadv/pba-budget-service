@@ -68,10 +68,8 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public IncomeDto deleteIncomeByUid(UUID uid) {
+    public void deleteIncomeByUid(UUID uid) {
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
-        IncomeCategory incomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToDelete.getCategoryId());
-        Income deletedIncome = incomeService.deleteIncomeById(incomeToDelete.getId());
-        return incomeDtoMapper.toIncomeDto(deletedIncome, incomeCategory.getName());
+        incomeService.deleteIncomeById(incomeToDelete.getId());
     }
 }
