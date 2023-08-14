@@ -36,4 +36,15 @@ public class IncomeServiceImpl implements IncomeService {
     public Income updateIncome(Income income) {
         return incomeDao.update(income, income.getId());
     }
+
+    @Override
+    public Income deleteIncomeById(Long id) {
+        return incomeDao.deleteById(id);
+    }
+
+    @Override
+    public Income getIncomeById(Long id) {
+        return incomeDao.getById(id)
+                .orElseThrow(() -> new BudgetServiceException(String.format("Income with id %d does not exist!", id)));
+    }
 }

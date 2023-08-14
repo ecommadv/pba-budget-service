@@ -42,13 +42,13 @@ public class IncomeFacadeImpl implements IncomeFacade {
         income.setCategoryId(incomeCategory.getId());
 
         Income savedIncome = incomeService.addIncome(income);
-        return incomeDtoMapper.toIncomeResponse(savedIncome, incomeCategory.getName());
+        return incomeDtoMapper.toIncomeDto(savedIncome, incomeCategory.getName());
     }
 
     @Override
     public List<IncomeDto> getAllIncomes() {
         Map<Long, String> incomeCategoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeDtoMapper.toIncomeResponse(incomeService.getAllIncomes(),
+        return incomeDtoMapper.toIncomeDto(incomeService.getAllIncomes(),
                                                 incomeCategoryIdToNameMapping);
     }
 
@@ -64,6 +64,12 @@ public class IncomeFacadeImpl implements IncomeFacade {
         Income updatedIncome = incomeDtoMapper.toIncome(incomeUpdateRequest, incomeToUpdate);
         incomeService.updateIncome(updatedIncome);
 
-        return incomeDtoMapper.toIncomeResponse(updatedIncome, incomeCategory.getName());
+        return incomeDtoMapper.toIncomeDto(updatedIncome, incomeCategory.getName());
+    }
+
+    @Override
+    public void deleteIncomeByUid(UUID uid) {
+        Income incomeToDelete = incomeService.getIncomeByUid(uid);
+        incomeService.deleteIncomeById(incomeToDelete.getId());
     }
 }

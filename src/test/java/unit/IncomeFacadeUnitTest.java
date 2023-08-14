@@ -56,7 +56,7 @@ public class IncomeFacadeUnitTest {
         when(accountService.addAccount(account)).thenReturn(account);
         when(incomeCategoryService.getIncomeCategoryByUid(incomeRequest.getCategoryUid())).thenReturn(incomeCategory);
         when(incomeService.addIncome(income)).thenReturn(income);
-        when(incomeDtoMapper.toIncomeResponse(income, incomeCategory.getName())).thenReturn(incomeResponse);
+        when(incomeDtoMapper.toIncomeDto(income, incomeCategory.getName())).thenReturn(incomeResponse);
 
         // when
         IncomeDto result = incomeFacade.addIncome(incomeRequest);

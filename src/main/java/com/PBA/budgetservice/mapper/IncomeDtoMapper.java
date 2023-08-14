@@ -26,12 +26,12 @@ public interface IncomeDtoMapper {
     public Account toAccount(IncomeCreateRequest incomeRequest);
 
     @Mapping(target = "categoryName", expression = "java(categoryIdToNameMapping.get(income.getCategoryId()))")
-    public IncomeDto toIncomeResponse(Income income,
-                                      @Context Map<Long, String> categoryIdToNameMapping);
+    public IncomeDto toIncomeDto(Income income,
+                                 @Context Map<Long, String> categoryIdToNameMapping);
 
     @Mapping(target = "categoryName", expression = "java(categoryName)")
-    public IncomeDto toIncomeResponse(Income income, String categoryName);
+    public IncomeDto toIncomeDto(Income income, String categoryName);
 
-    public List<IncomeDto> toIncomeResponse(List<Income> incomes,
-                                            @Context Map<Long, String> categoryIdToNameMapping);
+    public List<IncomeDto> toIncomeDto(List<Income> incomes,
+                                       @Context Map<Long, String> categoryIdToNameMapping);
 }
