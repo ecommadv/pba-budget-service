@@ -5,7 +5,7 @@ import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.mapper.IncomeDtoMapper;
+import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
@@ -21,19 +21,19 @@ public class IncomeFacadeImpl implements IncomeFacade {
     private final IncomeService incomeService;
     private final AccountService accountService;
     private final IncomeCategoryService incomeCategoryService;
-    private final IncomeDtoMapper incomeDtoMapper;
+    private final IncomeMapper incomeMapper;
 
-    public IncomeFacadeImpl(IncomeService incomeService, AccountService accountService, IncomeCategoryService incomeCategoryService, IncomeDtoMapper incomeDtoMapper) {
+    public IncomeFacadeImpl(IncomeService incomeService, AccountService accountService, IncomeCategoryService incomeCategoryService, IncomeMapper incomeMapper) {
         this.incomeService = incomeService;
         this.accountService = accountService;
         this.incomeCategoryService = incomeCategoryService;
-        this.incomeDtoMapper = incomeDtoMapper;
+        this.incomeMapper = incomeMapper;
     }
 
     @Override
     public IncomeDto addIncome(IncomeCreateRequest incomeRequest) {
-        Account account = incomeDtoMapper.toAccount(incomeRequest);
-        Income income = incomeDtoMapper.toIncome(incomeRequest);
+        Account account = incomeMapper.toAccount(incomeRequest);
+        Income income = incomeMapper.toIncome(incomeRequest);
 
         Account savedAccount = accountService.addAccount(account);
         income.setAccountId(savedAccount.getId());
@@ -42,13 +42,13 @@ public class IncomeFacadeImpl implements IncomeFacade {
         income.setCategoryId(incomeCategory.getId());
 
         Income savedIncome = incomeService.addIncome(income);
-        return incomeDtoMapper.toIncomeDto(savedIncome, incomeCategory.getName());
+        return incomeMapper.toIncomeDto(savedIncome, incomeCategory.getName());
     }
 
     @Override
     public List<IncomeDto> getAllIncomes() {
         Map<Long, String> incomeCategoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeDtoMapper.toIncomeDto(incomeService.getAllIncomes(),
+        return incomeMapper.toIncomeDto(incomeService.getAllIncomes(),
                                                 incomeCategoryIdToNameMapping);
     }
 
@@ -61,10 +61,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
         IncomeCategory incomeCategory = incomeCategoryService.getIncomeCategoryByUid(categoryUid);
         incomeToUpdate.setCategoryId(incomeCategory.getId());
 
-        Income updatedIncome = incomeDtoMapper.toIncome(incomeUpdateRequest, incomeToUpdate);
+        Income updatedIncome = incomeMapper.toIncome(incomeUpdateRequest, incomeToUpdate);
         incomeService.updateIncome(updatedIncome);
 
-        return incomeDtoMapper.toIncomeDto(updatedIncome, incomeCategory.getName());
+        return incomeMapper.toIncomeDto(updatedIncome, incomeCategory.getName());
     }
 
     @Override

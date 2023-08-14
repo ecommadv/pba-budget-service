@@ -1,11 +1,11 @@
 package unit;
 
 import com.PBA.budgetservice.facade.IncomeFacadeImpl;
+import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.mapper.IncomeDtoMapper;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
@@ -33,7 +33,7 @@ public class IncomeFacadeUnitTest {
     private IncomeService incomeService;
 
     @Mock
-    private IncomeDtoMapper incomeDtoMapper;
+    private IncomeMapper incomeDtoMapper;
 
     @Mock
     private AccountService accountService;

@@ -45,8 +45,8 @@ public class IncomeDaoIntegrationTest extends BaseDaoIntegrationTest {
         Income result = incomeDao.save(income);
 
         // then
-        Assertions.assertEquals(income.getDescription(), result.getDescription());
-        Assertions.assertEquals(1, accountDao.getAll().size());
+        Assertions.assertEquals(income.getUid(), result.getUid());
+        Assertions.assertEquals(1, incomeDao.getAll().size());
     }
     @Test
     public void testGetAll() {
@@ -57,15 +57,15 @@ public class IncomeDaoIntegrationTest extends BaseDaoIntegrationTest {
         this.addMockListOfIncomeCategories(incomeCategories);
         List<Income> incomes = IncomeMockGenerator.generateMockListOfIncomes(incomeCategoryDao.getAll(), accountDao.getAll(), 10);
         this.addMockListOfIncomes(incomes);
-        List<String> incomeDescriptionExpected = this.extractIncomeDescriptions(incomes);
+        List<UUID> incomeUidsExpected = this.extractIncomeUids(incomes);
 
 
         // when
         List<Income> result = incomeDao.getAll();
-        List<String> incomeDescriptionsResult = this.extractIncomeDescriptions(result);
+        List<UUID> incomeUidsResult = this.extractIncomeUids(result);
 
         // then
-        Assertions.assertEquals(incomeDescriptionExpected, incomeDescriptionsResult);
+        Assertions.assertEquals(incomeUidsExpected, incomeUidsResult);
     }
 
     @Test
@@ -175,7 +175,7 @@ public class IncomeDaoIntegrationTest extends BaseDaoIntegrationTest {
         }
     }
 
-    private List<String> extractIncomeDescriptions(List<Income> incomes) {
-        return incomes.stream().map(Income::getDescription).collect(Collectors.toList());
+    private List<UUID> extractIncomeUids(List<Income> incomes) {
+        return incomes.stream().map(Income::getUid).collect(Collectors.toList());
     }
 }

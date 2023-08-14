@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface IncomeDtoMapper {
+public interface IncomeMapper {
     @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
     public Income toIncome(IncomeCreateRequest incomeRequest);
 
