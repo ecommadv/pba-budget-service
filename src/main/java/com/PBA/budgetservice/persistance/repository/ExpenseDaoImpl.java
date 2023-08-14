@@ -16,6 +16,7 @@ public class ExpenseDaoImpl extends JdbcRepository<Expense, Long> implements Exp
     private final ExpenseRowMapper expenseRowMapper;
     private final ExpenseSqlProvider expenseSqlProvider;
     private final JdbcTemplate jdbcTemplate;
+
     public ExpenseDaoImpl(ExpenseRowMapper rowMapper, ExpenseSqlProvider sqlProvider, JdbcTemplate jdbcTemplate, UtilsFactory utilsFactory) {
         super(rowMapper, sqlProvider, jdbcTemplate, utilsFactory);
         this.expenseRowMapper = rowMapper;
