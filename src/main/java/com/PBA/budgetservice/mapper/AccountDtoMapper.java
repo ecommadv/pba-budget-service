@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface AccountDtoMapper {
-    public Account fromAccountRequestToAccount(AccountRequest accountRequest);
+    public Account toAccount(AccountRequest accountRequest);
 
-    public AccountDto fromAccountToAccountResponse(Account accountResult);
+    public AccountDto toAccountDto(Account accountResult);
 }
