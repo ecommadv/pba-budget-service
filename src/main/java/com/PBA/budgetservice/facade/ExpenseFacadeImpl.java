@@ -47,9 +47,7 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     @Override
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid) {
         Expense expenseToUpdate = expenseService.getByUid(uid);
-        ExpenseCategory expenseCategory = expenseUpdateRequest.getCategoryUid() == null
-                ? expenseCategoryService.getById(expenseToUpdate.getCategoryId())
-                : expenseCategoryService.getByUid(expenseUpdateRequest.getCategoryUid());
+        ExpenseCategory expenseCategory = this.getUpdatedExpenseCategory(expenseUpdateRequest, expenseToUpdate);
 
         Expense updatedExpense = expenseMapper.toExpense(expenseUpdateRequest, expenseToUpdate, expenseCategory);
         Expense expenseResult = expenseService.updateExpense(updatedExpense);
@@ -67,5 +65,11 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     public void deleteExpenseByUid(UUID uid) {
         Expense expenseToDelete = expenseService.getByUid(uid);
         expenseService.deleteById(expenseToDelete.getId());
+    }
+
+    private ExpenseCategory getUpdatedExpenseCategory(ExpenseUpdateRequest expenseUpdateRequest, Expense expenseToUpdate) {
+        return expenseUpdateRequest.getCategoryUid() == null
+                ? expenseCategoryService.getById(expenseToUpdate.getCategoryId())
+                : expenseCategoryService.getByUid(expenseUpdateRequest.getCategoryUid());
     }
 }
