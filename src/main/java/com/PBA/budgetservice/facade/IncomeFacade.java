@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.facade;
 
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 
@@ -12,4 +13,5 @@ public interface IncomeFacade {
     public List<IncomeDto> getAllIncomes();
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid);
     public void deleteIncomeByUid(UUID uid);
+    public List<IncomeCategoryDto> getAllIncomeCategories();
 }

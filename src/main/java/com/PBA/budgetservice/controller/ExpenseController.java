@@ -2,6 +2,7 @@ package com.PBA.budgetservice.controller;
 
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,4 +48,11 @@ public interface ExpenseController {
     })
     @DeleteMapping("/{uid}")
     public ResponseEntity<Void> deleteExpense(@PathVariable("uid") UUID uid);
+
+    @Operation(summary = "Provides a list of all the expense categories that are currently stored in the system.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    @GetMapping("/category")
+    public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories();
 }

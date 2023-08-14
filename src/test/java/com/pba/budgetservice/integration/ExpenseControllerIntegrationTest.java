@@ -3,6 +3,7 @@ package com.pba.budgetservice.integration;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import com.PBA.budgetservice.persistance.model.*;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
@@ -129,6 +130,21 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
 
         Assertions.assertEquals(0, expenseDao.getAll().size());
         Assertions.assertFalse(expenseDao.getById(savedExpense.getId()).isPresent());
+    }
+
+    @Test
+    public void testGetAllExpenseCategories() throws Exception {
+        List<ExpenseCategory> expenseCategories = expenseCategoryDao.getAll();
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/expense/category"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String expenseCategoryDtosJSON = result.getResponse().getContentAsString();
+        List<ExpenseCategoryDto> expenseCategoryDtos = objectMapper.readValue(expenseCategoryDtosJSON, new TypeReference<List<ExpenseCategoryDto>>(){});
+        List<UUID> expectedUids = expenseCategories.stream().map(ExpenseCategory::getUid).toList();
+        List<UUID> resultedUids = expenseCategoryDtos.stream().map(ExpenseCategoryDto::getUid).toList();
+
+        Assertions.assertEquals(expectedUids, resultedUids);
     }
 
     private void addMockAccounts(List<Account> accounts) {

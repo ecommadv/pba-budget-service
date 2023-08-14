@@ -4,6 +4,7 @@ import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
@@ -71,5 +72,11 @@ public class IncomeFacadeImpl implements IncomeFacade {
     public void deleteIncomeByUid(UUID uid) {
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
         incomeService.deleteIncomeById(incomeToDelete.getId());
+    }
+
+    @Override
+    public List<IncomeCategoryDto> getAllIncomeCategories() {
+        List<IncomeCategory> incomeCategories = incomeCategoryService.getAllIncomeCategories();
+        return incomeMapper.toIncomeCategoryDto(incomeCategories);
     }
 }
