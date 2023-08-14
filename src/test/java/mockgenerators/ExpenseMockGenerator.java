@@ -1,6 +1,7 @@
 package mockgenerators;
 
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
+import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
@@ -65,5 +66,21 @@ public class ExpenseMockGenerator {
         List<Currency> currencies = new ArrayList<>(Currency.getAvailableCurrencies());
         Collections.shuffle(currencies);
         return currencies.stream().findFirst().get().toString();
+    }
+
+    public static ExpenseUpdateRequest generateMockExpenseUpdateRequest(List<ExpenseCategory> expenseCategories) {
+        if (expenseCategories.isEmpty()) {
+            return null;
+        }
+
+        List<UUID> expenseCategoryUids = expenseCategories.stream().map(ExpenseCategory::getUid).collect(Collectors.toList());
+        Collections.shuffle(expenseCategoryUids);
+
+        return ExpenseUpdateRequest.builder()
+                .amount(BigDecimal.valueOf(new Random().nextDouble()))
+                .name(UUID.randomUUID().toString())
+                .description(UUID.randomUUID().toString())
+                .categoryUid(expenseCategoryUids.stream().findFirst().get())
+                .build();
     }
 }
