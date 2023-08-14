@@ -62,4 +62,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);
     }
+
+    @Override
+    public void deleteExpenseByUid(UUID uid) {
+        Expense expenseToDelete = expenseService.getByUid(uid);
+        expenseService.deleteById(expenseToDelete.getId());
+    }
 }

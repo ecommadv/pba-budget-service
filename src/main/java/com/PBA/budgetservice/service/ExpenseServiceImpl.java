@@ -36,4 +36,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     public List<Expense> getAll() {
         return expenseDao.getAll();
     }
+
+    @Override
+    public Expense deleteById(Long id) {
+        return expenseDao.deleteById(id);
+    }
 }
