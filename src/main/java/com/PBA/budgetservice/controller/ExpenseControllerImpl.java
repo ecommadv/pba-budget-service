@@ -36,4 +36,10 @@ public class ExpenseControllerImpl implements ExpenseController {
         List<ExpenseDto> expenseDtos = expenseFacade.getAllExpenses();
         return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteExpense(UUID uid) {
+        expenseFacade.deleteExpenseByUid(uid);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

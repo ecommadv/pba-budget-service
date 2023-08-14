@@ -11,4 +11,5 @@ public interface ExpenseFacade {
     public ExpenseDto addExpense(ExpenseCreateRequest expenseCreateRequest);
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid);
     public List<ExpenseDto> getAllExpenses();
+    public void deleteExpenseByUid(UUID uid);
 }

@@ -10,4 +10,5 @@ public interface ExpenseService {
     public Expense getByUid(UUID uid);
     public Expense updateExpense(Expense expense);
     public List<Expense> getAll();
+    public Expense deleteById(Long id);
 }

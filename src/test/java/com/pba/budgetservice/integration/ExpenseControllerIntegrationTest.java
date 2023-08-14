@@ -78,8 +78,8 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/expense"))
                 .andExpect(status().isOk())
                 .andReturn();
-        String incomeDtosJSON = result.getResponse().getContentAsString();
-        List<ExpenseDto> expenseDtos = objectMapper.readValue(incomeDtosJSON, new TypeReference<List<ExpenseDto>>(){});
+        String expenseDtosJSON = result.getResponse().getContentAsString();
+        List<ExpenseDto> expenseDtos = objectMapper.readValue(expenseDtosJSON, new TypeReference<List<ExpenseDto>>(){});
 
         Assertions.assertEquals(expenses.size(), expenseDtos.size());
         List<UUID> expensesUids = expenses.stream().map(Expense::getUid).toList();
@@ -113,6 +113,22 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         Assertions.assertEquals(expenseUpdateRequest.getName(), updatedExpense.getName());
         Assertions.assertEquals(expenseUpdateRequest.getDescription(), updatedExpense.getDescription());
         Assertions.assertEquals(expenseUpdateRequestCategory.getId(), updatedExpense.getCategoryId());
+    }
+
+    @Test
+    public void testDeleteExpense() throws Exception {
+        List<ExpenseCategory> expenseCategories = expenseCategoryDao.getAll();
+        List<Account> accounts = AccountMockGenerator.generateMockListOfAccounts(5);
+        this.addMockAccounts(accounts);
+        Expense expense = ExpenseMockGenerator.generateMockExpense(expenseCategories, accountDao.getAll());
+        Expense savedExpense = expenseDao.save(expense);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete(String.format("/expense/%s", savedExpense.getUid().toString())))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals(0, expenseDao.getAll().size());
+        Assertions.assertFalse(expenseDao.getById(savedExpense.getId()).isPresent());
     }
 
     private void addMockAccounts(List<Account> accounts) {
