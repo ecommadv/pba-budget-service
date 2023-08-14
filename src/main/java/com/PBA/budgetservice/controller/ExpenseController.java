@@ -41,7 +41,7 @@ public interface ExpenseController {
 
     @Operation(summary = "Deletes the expense with the given uid from the system, if it exists.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "204", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
             @ApiResponse(responseCode = "400", description = "Bad Request")
     })
