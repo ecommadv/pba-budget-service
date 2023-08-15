@@ -1,15 +1,16 @@
 package com.PBA.budgetservice.facade;
 
-import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
-import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
-import com.PBA.budgetservice.mapper.ExpenseMapper;
-import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
 import com.PBA.budgetservice.service.ExpenseService;
+import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
+import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
+import com.PBA.budgetservice.mapper.ExpenseMapper;
+import com.PBA.budgetservice.persistance.model.Account;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -56,16 +57,24 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     }
 
     @Override
-    public List<ExpenseDto> getAllExpenses() {
-        List<Expense> expenses = expenseService.getAll();
-        Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
-        return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);
-    }
-
-    @Override
     public void deleteExpenseByUid(UUID uid) {
         Expense expenseToDelete = expenseService.getByUid(uid);
         expenseService.deleteById(expenseToDelete.getId());
+    }
+
+    @Override
+    public List<ExpenseCategoryDto> getAllExpenseCategories() {
+        List<ExpenseCategory> expenseCategories = expenseCategoryService.getAll();
+        return expenseMapper.toExpenseCategoryDto(expenseCategories);
+    }
+
+    @Override
+    public List<ExpenseDto> getAllExpensesByUserUidAndCurrency(UUID userUid, String currency) {
+        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
+        List<Expense> expenses = expenseService.getByAccountId(account.getId());
+
+        Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
+        return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);
     }
 
     private ExpenseCategory getUpdatedExpenseCategory(ExpenseUpdateRequest expenseUpdateRequest, Expense expenseToUpdate) {

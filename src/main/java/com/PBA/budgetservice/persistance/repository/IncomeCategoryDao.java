@@ -1,6 +1,5 @@
 package com.PBA.budgetservice.persistance.repository;
 
-import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 
 import java.util.List;

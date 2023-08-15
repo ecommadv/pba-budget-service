@@ -1,7 +1,6 @@
 package unit;
 
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
-import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDaoImpl;
 import com.PBA.budgetservice.persistance.repository.UtilsFactory;

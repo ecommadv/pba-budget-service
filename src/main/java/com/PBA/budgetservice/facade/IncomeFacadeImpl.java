@@ -1,15 +1,16 @@
 package com.PBA.budgetservice.facade;
 
-import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
+import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
-import com.PBA.budgetservice.mapper.IncomeMapper;
-import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeService;
+import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
+import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,13 +47,6 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public List<IncomeDto> getAllIncomes() {
-        Map<Long, String> incomeCategoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomeService.getAllIncomes(),
-                                                incomeCategoryIdToNameMapping);
-    }
-
-    @Override
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid) {
         Income incomeToUpdate = incomeService.getIncomeByUid(uid);
         IncomeCategory currentIncomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToUpdate.getCategoryId());
@@ -71,5 +65,20 @@ public class IncomeFacadeImpl implements IncomeFacade {
     public void deleteIncomeByUid(UUID uid) {
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
         incomeService.deleteIncomeById(incomeToDelete.getId());
+    }
+
+    @Override
+    public List<IncomeCategoryDto> getAllIncomeCategories() {
+        List<IncomeCategory> incomeCategories = incomeCategoryService.getAllIncomeCategories();
+        return incomeMapper.toIncomeCategoryDto(incomeCategories);
+    }
+
+    @Override
+    public List<IncomeDto> getAllIncomesByUserUidAndCurrency(UUID userUid, String currency) {
+        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
+        List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
+
+        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
+        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
     }
 }

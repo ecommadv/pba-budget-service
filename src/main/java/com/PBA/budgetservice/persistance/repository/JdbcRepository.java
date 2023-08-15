@@ -1,11 +1,9 @@
 package com.PBA.budgetservice.persistance.repository;
 
-import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.repository.sql.SqlProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.lang.reflect.Field;

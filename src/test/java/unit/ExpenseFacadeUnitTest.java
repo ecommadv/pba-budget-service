@@ -9,7 +9,6 @@ import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
-import com.PBA.budgetservice.service.ExpenseCategoryServiceImpl;
 import com.PBA.budgetservice.service.ExpenseService;
 import mockgenerators.AccountMockGenerator;
 import mockgenerators.ExpenseCategoryMockGenerator;

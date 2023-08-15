@@ -4,6 +4,7 @@ import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
@@ -70,14 +71,22 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
     }
 
     @Test
-    public void testGetAllIncomes() throws Exception {
+    public void testGetAllIncomesByUserUidAndCurrency() throws Exception {
         List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
         List<Account> accounts = AccountMockGenerator.generateMockListOfAccounts(5);
         this.addMockAccounts(accounts);
         List<Income> incomes = IncomeMockGenerator.generateMockListOfIncomes(incomeCategoryList, accountDao.getAll(), 10);
+        Account accountToSearchBy = accountDao.getAll().stream().findFirst().get();
+        Long accountId = accountToSearchBy.getId();
+        String currency = accountToSearchBy.getCurrency();
+        UUID userUid = accountToSearchBy.getUserUid();
+        incomes.forEach(income -> {
+            income.setAccountId(accountId);
+            income.setCurrency(currency);
+        });
         this.addMockIncomes(incomes);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/income"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/income?userUid=%s&currency=%s", userUid.toString(), currency)))
                 .andExpect(status().isOk())
                 .andReturn();
         String incomeDtosJSON = result.getResponse().getContentAsString();
@@ -129,6 +138,21 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
 
         Assertions.assertEquals(0, incomeDao.getAll().size());
         Assertions.assertFalse(incomeDao.getById(savedIncome.getId()).isPresent());
+    }
+
+    @Test
+    public void testGetAllIncomeCategories() throws Exception {
+        List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/income/category"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String incomeCategoryDtosJSON = result.getResponse().getContentAsString();
+        List<IncomeCategoryDto> incomeCategoryDtos = objectMapper.readValue(incomeCategoryDtosJSON, new TypeReference<List<IncomeCategoryDto>>(){});
+        List<UUID> expectedUids = incomeCategoryList.stream().map(IncomeCategory::getUid).toList();
+        List<UUID> resultedUids = incomeCategoryDtos.stream().map(IncomeCategoryDto::getUid).toList();
+
+        Assertions.assertEquals(expectedUids, resultedUids);
     }
 
     private void addMockAccounts(List<Account> accounts) {

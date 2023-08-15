@@ -1,12 +1,9 @@
 package com.PBA.budgetservice.persistance.repository;
 
-import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.mappers.IncomeCategoryRowMapper;
 import com.PBA.budgetservice.persistance.repository.sql.IncomeCategorySqlProvider;
-import com.PBA.budgetservice.persistance.repository.sql.IncomeSqlProvider;
-import com.PBA.budgetservice.persistance.repository.sql.SqlProvider;
+import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

@@ -5,6 +5,7 @@ import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,5 +35,10 @@ public class ExpenseCategoryServiceImpl implements ExpenseCategoryService {
         return expenseCategoryDao.getAll()
                 .stream()
                 .collect(Collectors.toMap(ExpenseCategory::getId, ExpenseCategory::getName));
+    }
+
+    @Override
+    public List<ExpenseCategory> getAll() {
+        return expenseCategoryDao.getAll();
     }
 }

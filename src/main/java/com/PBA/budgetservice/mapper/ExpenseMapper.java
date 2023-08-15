@@ -1,11 +1,12 @@
 package com.PBA.budgetservice.mapper;
 
-import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
-import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
+import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
+import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,4 +34,8 @@ public interface ExpenseMapper {
     public ExpenseDto toExpenseDto(Expense expense, @Context Map<Long, String> categoryIdToNameMapping);
 
     public List<ExpenseDto> toExpenseDto(List<Expense> expenses, @Context Map<Long, String> categoryIdToNameMapping);
+
+    public ExpenseCategoryDto toExpenseCategoryDto(ExpenseCategory expenseCategory);
+
+    public List<ExpenseCategoryDto> toExpenseCategoryDto(List<ExpenseCategory> expenseCategories);
 }

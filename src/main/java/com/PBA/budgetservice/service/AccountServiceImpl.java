@@ -1,15 +1,14 @@
 package com.PBA.budgetservice.service;
 
+import com.PBA.budgetservice.exceptions.BudgetServiceException;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -29,5 +28,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account deleteAccountById(Long id) {
         return accountDao.deleteById(id);
+    }
+
+    @Override
+    public Account getByUserUidAndCurrency(UUID userUid, String currency) {
+        return accountDao.getByUserUidAndCurrency(Pair.of(userUid, currency))
+                .orElseThrow(() -> new BudgetServiceException(
+                        String.format("Account with user uid %s and currency %s does not exist!",
+                        userUid.toString(),
+                        currency))
+                );
     }
 }

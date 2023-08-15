@@ -1,9 +1,11 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.facade.ExpenseFacade;
+import com.PBA.budgetservice.persistance.model.Expense;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
-import com.PBA.budgetservice.facade.ExpenseFacade;
-import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,8 +34,8 @@ public class ExpenseControllerImpl implements ExpenseController {
     }
 
     @Override
-    public ResponseEntity<List<ExpenseDto>> getAllExpenses() {
-        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpenses();
+    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserUidAndCurrency(UUID userUid, String currency) {
+        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpensesByUserUidAndCurrency(userUid, currency);
         return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
     }
 
@@ -41,5 +43,11 @@ public class ExpenseControllerImpl implements ExpenseController {
     public ResponseEntity<Void> deleteExpense(UUID uid) {
         expenseFacade.deleteExpenseByUid(uid);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories() {
+        List<ExpenseCategoryDto> expenseCategoryDtos = expenseFacade.getAllExpenseCategories();
+        return new ResponseEntity<>(expenseCategoryDtos, HttpStatus.OK);
     }
 }

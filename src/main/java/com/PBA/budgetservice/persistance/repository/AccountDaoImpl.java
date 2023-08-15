@@ -1,10 +1,8 @@
 package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.persistance.repository.mappers.AccountRowMapper;
-import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.sql.AccountSqlProvider;
-import com.PBA.budgetservice.persistance.repository.sql.SqlProvider;
-import com.PBA.budgetservice.persistance.repository.JdbcRepository;
+import com.PBA.budgetservice.persistance.model.Account;
 import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

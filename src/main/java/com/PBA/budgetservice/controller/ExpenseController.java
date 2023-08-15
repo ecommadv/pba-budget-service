@@ -1,8 +1,10 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.persistance.model.Expense;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
-import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,12 +34,14 @@ public interface ExpenseController {
     public ResponseEntity<ExpenseDto> updateExpense(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to update")
                                                     @RequestBody ExpenseUpdateRequest expenseUpdateRequest,
                                                     @PathVariable("uid") UUID uid);
-    @Operation(summary = "Provides a list of all the expenses that are currently stored in the system.")
+    @Operation(summary = "Provides a list of all the expenses with the specified user uid and currency that are currently stored in the system.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping
-    public ResponseEntity<List<ExpenseDto>> getAllExpenses();
+    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserUidAndCurrency(@RequestParam(name = "userUid") UUID userUid,
+                                                                               @RequestParam(name = "currency") String currency);
 
     @Operation(summary = "Deletes the expense with the given uid from the system, if it exists.")
     @ApiResponses(value = {
@@ -47,4 +51,11 @@ public interface ExpenseController {
     })
     @DeleteMapping("/{uid}")
     public ResponseEntity<Void> deleteExpense(@PathVariable("uid") UUID uid);
+
+    @Operation(summary = "Provides a list of all the expense categories that are currently stored in the system.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    @GetMapping("/category")
+    public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories();
 }
