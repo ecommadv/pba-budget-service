@@ -1,7 +1,6 @@
 package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
-import com.PBA.budgetservice.persistance.model.IncomeCategory;
 
 import java.util.List;
 import java.util.Optional;

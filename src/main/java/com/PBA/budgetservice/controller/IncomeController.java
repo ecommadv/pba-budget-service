@@ -1,9 +1,9 @@
 package com.PBA.budgetservice.controller;
 
-import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
-import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -25,12 +25,14 @@ public interface IncomeController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to create")
             @RequestBody IncomeCreateRequest incomeRequest);
 
-    @Operation(summary = "Provides a list of all the incomes that are currently stored in the system.")
+    @Operation(summary = "Provides a list of all the incomes with the specified user uid and currency that are currently stored in the system.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK")
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping
-    public ResponseEntity<List<IncomeDto>> getAllIncomes();
+    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserUidAndCurrency(@RequestParam("userUid") UUID userUid,
+                                                                             @RequestParam("currency") String currency);
 
     @Operation(summary = "Updates an income and persists the changes in the system.")
     @ApiResponses(value = {

@@ -4,7 +4,6 @@ import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
-import com.PBA.budgetservice.service.IncomeService;
 import com.PBA.budgetservice.service.IncomeServiceImpl;
 import mockgenerators.AccountMockGenerator;
 import mockgenerators.IncomeCategoryMockGenerator;

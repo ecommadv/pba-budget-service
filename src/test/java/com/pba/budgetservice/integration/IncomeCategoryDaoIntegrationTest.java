@@ -1,11 +1,8 @@
 package com.pba.budgetservice.integration;
 
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
-import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
-import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
-import mockgenerators.AccountMockGenerator;
 import mockgenerators.IncomeCategoryMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

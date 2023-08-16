@@ -11,4 +11,5 @@ public interface IncomeService {
     public Income updateIncome(Income income);
     public Income deleteIncomeById(Long id);
     public Income getIncomeById(Long id);
+    public List<Income> getIncomeByAccountId(Long accountId);
 }

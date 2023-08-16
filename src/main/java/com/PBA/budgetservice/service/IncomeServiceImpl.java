@@ -6,7 +6,9 @@ import com.PBA.budgetservice.persistance.repository.IncomeDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class IncomeServiceImpl implements IncomeService {
@@ -46,5 +48,13 @@ public class IncomeServiceImpl implements IncomeService {
     public Income getIncomeById(Long id) {
         return incomeDao.getById(id)
                 .orElseThrow(() -> new BudgetServiceException(String.format("Income with id %d does not exist!", id)));
+    }
+
+    @Override
+    public List<Income> getIncomeByAccountId(Long accountId) {
+        return incomeDao.getAll()
+                .stream()
+                .filter(income -> Objects.equals(income.getAccountId(), accountId))
+                .collect(Collectors.toList());
     }
 }

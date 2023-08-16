@@ -69,23 +69,31 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
     }
 
     @Test
-    public void testGetAllExpenses() throws Exception {
+    public void testGetAllExpensesByUserUidAndCurrency() throws Exception {
         List<ExpenseCategory> expenseCategories = expenseCategoryDao.getAll();
         List<Account> accounts = AccountMockGenerator.generateMockListOfAccounts(5);
         this.addMockAccounts(accounts);
         List<Expense> expenses = ExpenseMockGenerator.generateMockListOfExpenses(expenseCategories, accountDao.getAll(), 10);
+        Account accountToSearchBy = accountDao.getAll().stream().findFirst().get();
+        Long accountId = accountToSearchBy.getId();
+        String currency = accountToSearchBy.getCurrency();
+        UUID userUid = accountToSearchBy.getUserUid();
+        expenses.forEach((expense) -> {
+            expense.setAccountId(accountId);
+            expense.setCurrency(currency);
+        });
         this.addMockExpenses(expenses);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/expense"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/expense?userUid=%s&currency=%s", userUid.toString(), currency)))
                 .andExpect(status().isOk())
                 .andReturn();
         String expenseDtosJSON = result.getResponse().getContentAsString();
         List<ExpenseDto> expenseDtos = objectMapper.readValue(expenseDtosJSON, new TypeReference<List<ExpenseDto>>(){});
 
-        Assertions.assertEquals(expenses.size(), expenseDtos.size());
-        List<UUID> expensesUids = expenses.stream().map(Expense::getUid).toList();
-        List<UUID> expenseDtosUids = expenseDtos.stream().map(ExpenseDto::getUid).toList();
-        Assertions.assertEquals(expensesUids, expenseDtosUids);
+        Assertions.assertEquals(expenseDtos.size(), expenseDtos.size());
+        List<UUID> expectedUids = expenses.stream().map(Expense::getUid).toList();
+        List<UUID> resultedUids = expenseDtos.stream().map(ExpenseDto::getUid).toList();
+        Assertions.assertEquals(expectedUids, resultedUids);
     }
 
     @Test

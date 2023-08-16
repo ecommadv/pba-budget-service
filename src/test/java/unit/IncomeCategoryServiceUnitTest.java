@@ -3,8 +3,6 @@ package unit;
 import com.PBA.budgetservice.exceptions.BudgetServiceException;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
-import com.PBA.budgetservice.persistance.repository.IncomeCategoryDaoImpl;
-import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeCategoryServiceImpl;
 import mockgenerators.IncomeCategoryMockGenerator;
 import org.junit.jupiter.api.Assertions;

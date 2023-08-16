@@ -71,14 +71,22 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
     }
 
     @Test
-    public void testGetAllIncomes() throws Exception {
+    public void testGetAllIncomesByUserUidAndCurrency() throws Exception {
         List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
         List<Account> accounts = AccountMockGenerator.generateMockListOfAccounts(5);
         this.addMockAccounts(accounts);
         List<Income> incomes = IncomeMockGenerator.generateMockListOfIncomes(incomeCategoryList, accountDao.getAll(), 10);
+        Account accountToSearchBy = accountDao.getAll().stream().findFirst().get();
+        Long accountId = accountToSearchBy.getId();
+        String currency = accountToSearchBy.getCurrency();
+        UUID userUid = accountToSearchBy.getUserUid();
+        incomes.forEach(income -> {
+            income.setAccountId(accountId);
+            income.setCurrency(currency);
+        });
         this.addMockIncomes(incomes);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/income"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/income?userUid=%s&currency=%s", userUid.toString(), currency)))
                 .andExpect(status().isOk())
                 .andReturn();
         String incomeDtosJSON = result.getResponse().getContentAsString();

@@ -3,10 +3,7 @@ package com.PBA.budgetservice.persistance.repository;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.repository.mappers.ExpenseCategoryRowMapper;
 import com.PBA.budgetservice.persistance.repository.sql.ExpenseCategorySqlProvider;
-import com.PBA.budgetservice.persistance.repository.sql.ExpenseCategorySqlProviderImpl;
-import com.PBA.budgetservice.persistance.repository.sql.SqlProvider;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

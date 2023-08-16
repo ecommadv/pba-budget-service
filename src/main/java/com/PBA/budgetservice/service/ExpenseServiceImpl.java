@@ -6,7 +6,9 @@ import com.PBA.budgetservice.persistance.repository.ExpenseDao;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -40,5 +42,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense deleteById(Long id) {
         return expenseDao.deleteById(id);
+    }
+
+    @Override
+    public List<Expense> getByAccountId(Long accountId) {
+        return expenseDao.getAll()
+                .stream()
+                .filter(expense -> Objects.equals(expense.getAccountId(), accountId))
+                .collect(Collectors.toList());
     }
 }
