@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
@@ -48,4 +49,11 @@ public interface IncomeController {
     })
     @DeleteMapping("/{uid}")
     public ResponseEntity<Void> deleteIncome(@PathVariable("uid") UUID uid);
+
+    @Operation(summary = "Provides a list of all the income categories that are currently stored in the system.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    @GetMapping("/category")
+    public ResponseEntity<List<IncomeCategoryDto>> getAllIncomeCategories();
 }

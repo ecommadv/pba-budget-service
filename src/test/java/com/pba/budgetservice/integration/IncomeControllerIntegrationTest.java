@@ -4,6 +4,7 @@ import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
@@ -129,6 +130,21 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
 
         Assertions.assertEquals(0, incomeDao.getAll().size());
         Assertions.assertFalse(incomeDao.getById(savedIncome.getId()).isPresent());
+    }
+
+    @Test
+    public void testGetAllIncomeCategories() throws Exception {
+        List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/income/category"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String incomeCategoryDtosJSON = result.getResponse().getContentAsString();
+        List<IncomeCategoryDto> incomeCategoryDtos = objectMapper.readValue(incomeCategoryDtosJSON, new TypeReference<List<IncomeCategoryDto>>(){});
+        List<UUID> expectedUids = incomeCategoryList.stream().map(IncomeCategory::getUid).toList();
+        List<UUID> resultedUids = incomeCategoryDtos.stream().map(IncomeCategoryDto::getUid).toList();
+
+        Assertions.assertEquals(expectedUids, resultedUids);
     }
 
     private void addMockAccounts(List<Account> accounts) {

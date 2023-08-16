@@ -3,6 +3,7 @@ package com.PBA.budgetservice.controller;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import com.PBA.budgetservice.facade.ExpenseFacade;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,11 @@ public class ExpenseControllerImpl implements ExpenseController {
     public ResponseEntity<Void> deleteExpense(UUID uid) {
         expenseFacade.deleteExpenseByUid(uid);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories() {
+        List<ExpenseCategoryDto> expenseCategoryDtos = expenseFacade.getAllExpenseCategories();
+        return new ResponseEntity<>(expenseCategoryDtos, HttpStatus.OK);
     }
 }

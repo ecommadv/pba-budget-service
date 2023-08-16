@@ -2,6 +2,8 @@ package com.PBA.budgetservice.mapper;
 
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
+import com.PBA.budgetservice.persistance.model.IncomeCategory;
+import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
@@ -34,4 +36,8 @@ public interface IncomeMapper {
 
     public List<IncomeDto> toIncomeDto(List<Income> incomes,
                                        @Context Map<Long, String> categoryIdToNameMapping);
+
+    public IncomeCategoryDto toIncomeCategoryDto(IncomeCategory incomeCategory);
+
+    public List<IncomeCategoryDto> toIncomeCategoryDto(List<IncomeCategory> incomeCategories);
 }

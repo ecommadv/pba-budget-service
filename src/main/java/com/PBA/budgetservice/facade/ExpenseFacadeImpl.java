@@ -6,6 +6,7 @@ import com.PBA.budgetservice.mapper.ExpenseMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
+import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
@@ -66,6 +67,12 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     public void deleteExpenseByUid(UUID uid) {
         Expense expenseToDelete = expenseService.getByUid(uid);
         expenseService.deleteById(expenseToDelete.getId());
+    }
+
+    @Override
+    public List<ExpenseCategoryDto> getAllExpenseCategories() {
+        List<ExpenseCategory> expenseCategories = expenseCategoryService.getAll();
+        return expenseMapper.toExpenseCategoryDto(expenseCategories);
     }
 
     private ExpenseCategory getUpdatedExpenseCategory(ExpenseUpdateRequest expenseUpdateRequest, Expense expenseToUpdate) {
