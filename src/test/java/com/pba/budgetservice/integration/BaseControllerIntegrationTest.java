@@ -9,7 +9,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.util.List;
 
 @SpringBootTest
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:/cleanup.sql", "classpath:/V1_0__data.sql", })
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:/cleanup.sql", "classpath:/data.sql", })
 @AutoConfigureMockMvc
 public class BaseControllerIntegrationTest {
     @ServiceConnection
