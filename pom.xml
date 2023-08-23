@@ -23,26 +23,9 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>com.PersonalBudgetAdviser</groupId>
-            <artifactId>AuthService</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>8.5.13</version>
-                <configuration>
-                    <url>jdbc:postgresql://localhost:5432/budget</url>
-                    <user>postgres</user>
-                    <password>larlarlar</password>
-                    <schemas>public</schemas>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
