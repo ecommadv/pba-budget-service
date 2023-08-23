@@ -39,4 +39,9 @@ public class AccountServiceImpl implements AccountService {
                         currency))
                 );
     }
+
+    @Override
+    public boolean accountExists(UUID userUid, String currency) {
+        return accountDao.getByUserUidAndCurrency(Pair.of(userUid, currency)).isPresent();
+    }
 }
