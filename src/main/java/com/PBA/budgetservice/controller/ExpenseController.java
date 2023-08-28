@@ -8,6 +8,7 @@ import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public interface ExpenseController {
     @PostMapping
     public ResponseEntity<ExpenseDto> createExpense(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Expense to create")
-            @RequestBody ExpenseCreateRequest expenseCreateRequest);
+            @Valid @RequestBody ExpenseCreateRequest expenseCreateRequest);
 
     @Operation(summary = "Updates an expense and persists the changes in the system.")
     @ApiResponses(value = {
@@ -32,7 +33,7 @@ public interface ExpenseController {
     })
     @PutMapping("/{uid}")
     public ResponseEntity<ExpenseDto> updateExpense(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to update")
-                                                    @RequestBody ExpenseUpdateRequest expenseUpdateRequest,
+                                                    @Valid @RequestBody ExpenseUpdateRequest expenseUpdateRequest,
                                                     @PathVariable("uid") UUID uid);
     @Operation(summary = "Provides a list of all the expenses with the specified user uid and currency that are currently stored in the system.")
     @ApiResponses(value = {

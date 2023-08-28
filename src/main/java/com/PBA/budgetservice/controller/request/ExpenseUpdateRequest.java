@@ -1,5 +1,9 @@
 package com.PBA.budgetservice.controller.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +17,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class ExpenseUpdateRequest {
+    @NotNull(message = "{amount.notnull}")
+    @Positive(message = "{amount.positive}")
     private BigDecimal amount;
+
+    @NotBlank(message = "{name.notblank}")
+    @Size(max = 50, message = "{name.maxsize}")
     private String name;
+
+    @NotBlank(message = "{description.notblank}")
+    @Size(max = 500, message = "{description.maxsize}")
     private String description;
+
+    @NotNull(message = "{categoryUid.notnull}")
     private UUID categoryUid;
 }
