@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.service;
 
-import com.PBA.budgetservice.exceptions.BudgetServiceException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,17 @@ public class ExpenseCategoryServiceImpl implements ExpenseCategoryService {
     @Override
     public ExpenseCategory getByUid(UUID categoryUid) {
         return expenseCategoryDao.getByUid(categoryUid)
-                .orElseThrow(() -> new BudgetServiceException(String.format("Expense category with uid %s does not exist!", categoryUid.toString())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Expense category with uid %s does not exist!", categoryUid.toString()),
+                        ErrorCodes.EXPENSE_CATEGORY_NOT_FOUND));
     }
 
     @Override
     public ExpenseCategory getById(Long id) {
         return expenseCategoryDao.getById(id)
-                .orElseThrow(() -> new BudgetServiceException(String.format("Expense category with id %d does not exist!", id)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Expense category with id %d does not exist!", id),
+                        ErrorCodes.EXPENSE_CATEGORY_NOT_FOUND));
     }
 
     @Override
