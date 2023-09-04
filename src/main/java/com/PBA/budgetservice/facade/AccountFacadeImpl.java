@@ -1,6 +1,8 @@
 package com.PBA.budgetservice.facade;
 
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
+import com.PBA.budgetservice.exceptions.EntityAlreadyExistsException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.mapper.AccountMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
@@ -32,7 +34,10 @@ public class AccountFacadeImpl implements AccountFacade {
         UUID userUid = accountCreateRequest.getUserUid();
         String currency = accountCreateRequest.getCurrency();
         if (accountService.accountExists(userUid, currency)) {
-            //todo: throw AccountAlreadyExists exception and handle it
+            throw new EntityAlreadyExistsException(
+                    String.format("Account with user uid %s and currency %s already exists", userUid, currency),
+                    ErrorCodes.ACCOUNT_ALREADY_EXISTS
+            );
         }
     }
 }

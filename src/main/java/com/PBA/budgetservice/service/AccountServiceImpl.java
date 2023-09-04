@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.service;
 
-import com.PBA.budgetservice.exceptions.BudgetServiceException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getByUserUidAndCurrency(UUID userUid, String currency) {
         return accountDao.getByUserUidAndCurrency(Pair.of(userUid, currency))
-                .orElseThrow(() -> new BudgetServiceException(
+                .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Account with user uid %s and currency %s does not exist!",
                         userUid.toString(),
-                        currency))
+                        currency), ErrorCodes.ACCOUNT_NOT_FOUND)
                 );
     }
 

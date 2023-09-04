@@ -1,7 +1,9 @@
 package com.PBA.budgetservice.persistance.repository;
 
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.repository.sql.SqlProvider;
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.KeyHolder;
@@ -60,7 +62,11 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         String sql = sqlProvider.deleteById();
         int rowCount = jdbcTemplate.update(sql, id);
         if (rowCount == 0) {
-            throw new BudgetDaoException(String.format("Object with id %s is not stored!", id.toString()));
+            throw new BudgetDaoException(
+                    String.format("Object with id %s is not stored!", id.toString()),
+                    ErrorCodes.ENTITY_NOT_FOUND,
+                    HttpStatus.NOT_FOUND
+            );
         }
         return obj.get();
     }
@@ -71,7 +77,11 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         args.add(id);
         int rowCount = jdbcTemplate.update(sql, args.toArray());
         if (rowCount == 0) {
-            throw new BudgetDaoException(String.format("Object with id %s is not stored!", id.toString()));
+            throw new BudgetDaoException(
+                    String.format("Object with id %s is not stored!", id.toString()),
+                    ErrorCodes.ENTITY_NOT_FOUND,
+                    HttpStatus.NOT_FOUND
+            );
         }
         return obj;
     }
@@ -89,7 +99,7 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         try {
             return field.get(obj);
         } catch (IllegalAccessException e) {
-            throw new BudgetDaoException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

@@ -1,6 +1,6 @@
 package unit;
 
-import com.PBA.budgetservice.exceptions.BudgetServiceException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
 import com.PBA.budgetservice.service.IncomeCategoryServiceImpl;
@@ -42,7 +42,7 @@ public class IncomeCategoryServiceUnitTest {
         when(incomeCategoryDao.getIncomeCategoryByUid(incomeCategory.getUid())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> incomeCategoryService.getIncomeCategoryByUid(incomeCategory.getUid()))
-                .isInstanceOf(BudgetServiceException.class)
+                .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(String.format("Income category with uid %s does not exist!", incomeCategory.getUid().toString()));
     }
 }

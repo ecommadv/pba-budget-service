@@ -1,8 +1,10 @@
 package com.pba.budgetservice.integration;
 
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
+import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.BeforeEach;
