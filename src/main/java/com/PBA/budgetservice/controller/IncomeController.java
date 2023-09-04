@@ -7,6 +7,7 @@ import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public interface IncomeController {
     @PostMapping
     public ResponseEntity<IncomeDto> createIncome(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to create")
-            @RequestBody IncomeCreateRequest incomeRequest);
+            @Valid @RequestBody IncomeCreateRequest incomeRequest);
 
     @Operation(summary = "Provides a list of all the incomes with the specified user uid and currency that are currently stored in the system.")
     @ApiResponses(value = {
@@ -41,7 +42,7 @@ public interface IncomeController {
     @PutMapping("/{uid}")
     public ResponseEntity<IncomeDto> updateIncome(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to update")
-            @RequestBody IncomeUpdateRequest incomeUpdateRequest, @PathVariable("uid") UUID uid);
+            @Valid @RequestBody IncomeUpdateRequest incomeUpdateRequest, @PathVariable("uid") UUID uid);
 
     @Operation(summary = "Deletes the income with the given uid from the system, if it exists.")
     @ApiResponses(value = {

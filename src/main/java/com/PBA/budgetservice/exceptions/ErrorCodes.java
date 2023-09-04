@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.exceptions;
 
 public class ErrorCodes {
+    public static final String HTTP_MESSAGE_NOT_READABLE = "http.message.not.readable";
     public static final String EXPENSE_NOT_FOUND = "expense.not.found";
     public static final String INCOME_NOT_FOUND = "income.not.found";
     public static final String ACCOUNT_NOT_FOUND = "account.not.found";
