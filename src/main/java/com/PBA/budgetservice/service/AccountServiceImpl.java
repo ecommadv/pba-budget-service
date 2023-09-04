@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     public Account getByUserUidAndCurrency(UUID userUid, String currency) {
         return accountDao.getByUserUidAndCurrency(Pair.of(userUid, currency))
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Account with user uid %s and currency %s does not exist!",
+                        String.format("Account with user uid %s and currency %s does not exist",
                         userUid.toString(),
                         currency), ErrorCodes.ACCOUNT_NOT_FOUND)
                 );
