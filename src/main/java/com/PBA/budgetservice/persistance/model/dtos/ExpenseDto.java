@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.persistance.model.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 public class ExpenseDto {
+    @Schema(example = "500.32")
     private BigDecimal amount;
+
+    @Schema(example = "House invoice")
     private String name;
+
+    @Schema(example = "Expense for house invoice")
     private String description;
+
+    @Schema(example = "RON")
     private String currency;
+
+    @Schema(example = "4gf23f64-2341-2314-a4fd-5a432g33dab4")
     private UUID uid;
+
+    @Schema(example = "cat1")
     private String categoryName;
 }
