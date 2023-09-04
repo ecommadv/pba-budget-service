@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.service;
 
-import com.PBA.budgetservice.exceptions.BudgetServiceException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.repository.ExpenseDao;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense getByUid(UUID uid) {
         return expenseDao.getByUid(uid)
-                .orElseThrow(() -> new BudgetServiceException(String.format("Expense with uid %s does not exist!", uid.toString())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Expense with uid %s does not exist!", uid.toString()),
+                        ErrorCodes.EXPENSE_NOT_FOUND));
     }
 
     @Override

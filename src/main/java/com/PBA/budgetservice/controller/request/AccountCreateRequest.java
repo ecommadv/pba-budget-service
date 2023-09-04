@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AccountRequest {
+public class AccountCreateRequest {
     private UUID userUid;
     private String currency;
 }
