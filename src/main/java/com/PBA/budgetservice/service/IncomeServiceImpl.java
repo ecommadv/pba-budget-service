@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.service;
 
-import com.PBA.budgetservice.exceptions.BudgetServiceException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,9 @@ public class IncomeServiceImpl implements IncomeService {
     @Override
     public Income getIncomeByUid(UUID uid) {
         return incomeDao.getByUid(uid)
-                .orElseThrow(() -> new BudgetServiceException(String.format("Income with uid %s does not exist!", uid.toString())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Income with uid %s does not exist!", uid.toString()),
+                        ErrorCodes.INCOME_NOT_FOUND));
     }
 
     @Override
@@ -47,7 +50,9 @@ public class IncomeServiceImpl implements IncomeService {
     @Override
     public Income getIncomeById(Long id) {
         return incomeDao.getById(id)
-                .orElseThrow(() -> new BudgetServiceException(String.format("Income with id %d does not exist!", id)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Income with id %d does not exist!", id),
+                        ErrorCodes.INCOME_NOT_FOUND));
     }
 
     @Override
