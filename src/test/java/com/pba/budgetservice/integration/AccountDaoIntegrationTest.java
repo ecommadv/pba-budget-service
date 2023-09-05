@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-public class AccountDaoIntegrationTest extends BaseDaoIntegrationTest {
+public class AccountDaoIntegrationTest extends BaseJdbcDaoIntegrationTest {
     @Autowired
     private AccountDao accountDao;
 

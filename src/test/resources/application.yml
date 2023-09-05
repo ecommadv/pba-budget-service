@@ -1,11 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/budgettest
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: larlarlar
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/budgettest
 server:
   servlet:
     context-path: "/api"
 currency:
   rates:
     url: https://www.bnr.ro/nbrfxrates.xml
+    scheduler:
+      cron: 0 0 0 * * *

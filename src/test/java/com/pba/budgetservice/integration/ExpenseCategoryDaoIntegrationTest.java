@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ExpenseCategoryDaoIntegrationTest extends BaseDaoIntegrationTest {
+public class ExpenseCategoryDaoIntegrationTest extends BaseJdbcDaoIntegrationTest {
     @Autowired
     private ExpenseCategoryDao expenseCategoryDao;
 

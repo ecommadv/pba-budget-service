@@ -1,4 +1,4 @@
-package com.PBA.budgetservice.service;
+package com.PBA.budgetservice.gateway;
 
 import java.math.BigDecimal;
 import java.util.Map;
