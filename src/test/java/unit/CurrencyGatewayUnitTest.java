@@ -1,6 +1,6 @@
 package unit;
 
-import com.PBA.budgetservice.service.CurrencyGatewayImpl;
+import com.PBA.budgetservice.gateway.CurrencyGatewayImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

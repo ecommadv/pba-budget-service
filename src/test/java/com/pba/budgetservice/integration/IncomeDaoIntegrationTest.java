@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class IncomeDaoIntegrationTest extends BaseDaoIntegrationTest {
+public class IncomeDaoIntegrationTest extends BaseJdbcDaoIntegrationTest {
     @Autowired
     private IncomeDao incomeDao;
 

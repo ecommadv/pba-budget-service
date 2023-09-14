@@ -7,6 +7,14 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=larlarlar
-      - POSTGRES_DB=budgettest
     ports:
       - '5432:5432'
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: budgettest
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db

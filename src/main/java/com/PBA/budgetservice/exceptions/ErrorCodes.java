@@ -8,5 +8,6 @@ public class ErrorCodes {
     public static final String EXPENSE_CATEGORY_NOT_FOUND = "expense.category.not.found";
     public static final String INCOME_CATEGORY_NOT_FOUND = "income.category.not.found";
     public static final String ENTITY_NOT_FOUND = "entity.not.found";
+    public static final String CURRENCY_RATE_NOT_FOUND = "currency.rate.not.found";
     public static final String ACCOUNT_ALREADY_EXISTS = "account.already.exists";
 }
