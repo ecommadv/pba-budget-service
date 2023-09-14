@@ -1,11 +1,14 @@
 package com.pba.budgetservice.integration;
 
+import com.PBA.budgetservice.controller.advice.ApiExceptionResponse;
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +37,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
     @BeforeEach
     public void setUp() {
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Test
@@ -55,5 +61,34 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         assertTrue(accountDao.getByUserUidAndCurrency(Pair.of(accountCreateRequest.getUserUid(), accountCreateRequest.getCurrency())).isPresent());
         assertEquals(accountDto.getUserUid(), accountCreateRequest.getUserUid());
         assertEquals(accountDto.getCurrency(), accountCreateRequest.getCurrency());
+    }
+
+    @Test
+    public void testCreateAccountThatAlreadyExists() throws Exception {
+        // given
+        Account existentAccount = AccountMockGenerator.generateMockAccount();
+        accountDao.save(existentAccount);
+        AccountCreateRequest accountCreateRequest = AccountCreateRequest.builder()
+                .userUid(existentAccount.getUserUid())
+                .currency(existentAccount.getCurrency())
+                .build();
+        String createAccountEndpoint = "/account";
+        String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
+
+        // when
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(createAccountEndpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(accountCreateRequestJSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        String responseJSON = result.getResponse().getContentAsString();
+        ApiExceptionResponse response = objectMapper.readValue(responseJSON, ApiExceptionResponse.class);
+
+        // then
+        Map<String, String> expectedErrors = Map.of(
+                ErrorCodes.ACCOUNT_ALREADY_EXISTS,
+                String.format("Account with user uid %s and currency %s already exists", existentAccount.getUserUid(), existentAccount.getCurrency())
+        );
+        assertEquals(expectedErrors, response.errors());
     }
 }
