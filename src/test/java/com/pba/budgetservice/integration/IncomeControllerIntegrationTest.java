@@ -1,6 +1,8 @@
 package com.pba.budgetservice.integration;
 
+import com.PBA.budgetservice.controller.advice.ApiExceptionResponse;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
@@ -12,6 +14,7 @@ import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import mockgenerators.AccountMockGenerator;
 import mockgenerators.IncomeMockGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -24,9 +27,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTest {
@@ -47,6 +52,7 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
     @BeforeEach
     public void setUp() {
         objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Test
@@ -95,6 +101,28 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         List<UUID> incomesUids = incomes.stream().map(Income::getUid).toList();
         List<UUID> incomeDtosUids = incomeDtos.stream().map(IncomeDto::getUid).toList();
         Assertions.assertEquals(incomesUids, incomeDtosUids);
+    }
+
+    @Test
+    public void testGetAllIncomesByNonexistentUserUidAndCurrency() throws Exception {
+        // given
+        UUID nonexistentUid = UUID.randomUUID();
+        String nonexistentCurrency = "RON";
+        String getEndpoint = String.format("/income?userUid=%s&currency=%s", nonexistentUid, nonexistentCurrency);
+
+        // when
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getEndpoint))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        String responseJSON = result.getResponse().getContentAsString();
+        ApiExceptionResponse response = objectMapper.readValue(responseJSON, ApiExceptionResponse.class);
+
+        // then
+        Map<String, String> expectedErrors = Map.of(
+                ErrorCodes.ACCOUNT_NOT_FOUND,
+                String.format("Account with user uid %s and currency %s does not exist", nonexistentUid, nonexistentCurrency)
+        );
+        assertEquals(expectedErrors, response.errors());
     }
 
     @Test
