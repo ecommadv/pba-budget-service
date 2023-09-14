@@ -14,13 +14,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CurrencySchedulerImpl implements CurrencyScheduler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CurrencyGatewayImpl.class);
     private final CurrencyGateway currencyGateway;
     private final CurrencyService currencyService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CurrencyGatewayImpl.class);
 
     public CurrencySchedulerImpl(CurrencyGateway currencyGateway, CurrencyService currencyService) {
         this.currencyGateway = currencyGateway;
@@ -43,14 +42,16 @@ public class CurrencySchedulerImpl implements CurrencyScheduler {
         return exchangeRatesMapping
                 .entrySet()
                 .stream()
-                .map((entry -> {
-                        String code = entry.getKey();
-                        BigDecimal ronValue = entry.getValue();
-                        return CurrencyRate.builder()
-                                .code(code)
-                                .ronValue(ronValue)
-                                .build();
-                        }))
-                .collect(Collectors.toList());
+                .map(this::buildCurrencyRate)
+                .toList();
+    }
+
+    private CurrencyRate buildCurrencyRate(Map.Entry<String, BigDecimal> entry) {
+        String code = entry.getKey();
+        BigDecimal ronValue = entry.getValue();
+        return CurrencyRate.builder()
+                .code(code)
+                .mainValue(ronValue)
+                .build();
     }
 }

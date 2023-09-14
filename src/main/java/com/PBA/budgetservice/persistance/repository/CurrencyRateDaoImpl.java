@@ -60,7 +60,7 @@ public class CurrencyRateDaoImpl implements CurrencyRateDao {
                 query,
                 new Update()
                         .set("code", currencyRate.getCode())
-                        .set("ron_value", currencyRate.getRonValue()),
+                        .set("main_value", currencyRate.getMainValue()),
                 CurrencyRate.class
         );
 

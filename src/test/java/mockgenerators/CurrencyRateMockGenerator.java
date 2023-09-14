@@ -11,7 +11,7 @@ public class CurrencyRateMockGenerator {
     public static CurrencyRate generateMockCurrencyRate() {
         return CurrencyRate.builder()
                 .code(getRandomCode())
-                .ronValue(BigDecimal.valueOf(new Random().nextDouble()))
+                .mainValue(BigDecimal.valueOf(new Random().nextDouble()))
                 .build();
     }
 

@@ -41,7 +41,7 @@ public class CurrencyRateDaoIntegrationTest extends BaseMongoDaoIntegrationTest 
         // then
         assertEquals(1, currencyRateDao.getAll().size());
         assertEquals(currencyRate.getCode(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getCode());
-        assertEquals(currencyRate.getRonValue(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getRonValue());
+        assertEquals(currencyRate.getMainValue(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getMainValue());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class CurrencyRateDaoIntegrationTest extends BaseMongoDaoIntegrationTest 
         // then
         assertEquals(1, updatedCount);
         assertEquals(newCurrencyRate.getCode(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getCode());
-        assertEquals(newCurrencyRate.getRonValue(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getRonValue());
+        assertEquals(newCurrencyRate.getMainValue(), currencyRateDao.getById(savedCurrencyRate.getId()).get().getMainValue());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class CurrencyRateDaoIntegrationTest extends BaseMongoDaoIntegrationTest 
     private List<BigDecimal> extractRonValues(List<CurrencyRate> currencyRates) {
         return currencyRates
                 .stream()
-                .map(CurrencyRate::getRonValue)
+                .map(CurrencyRate::getMainValue)
                 .collect(Collectors.toList());
     }
 

@@ -19,6 +19,6 @@ public class CurrencyRate {
     @Id
     private String id;
     private String code;
-    @Field("ron_value")
-    private BigDecimal ronValue;
+    @Field("main_value")
+    private BigDecimal mainValue;
 }
