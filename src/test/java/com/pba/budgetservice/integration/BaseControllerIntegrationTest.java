@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import java.util.List;
 
@@ -15,7 +16,11 @@ public class BaseControllerIntegrationTest {
     @ServiceConnection
     private static PostgreSQLContainer postgreSQLContainer = PostgreSqlContainerConfig.getInstance();
 
+    @ServiceConnection
+    private static MongoDBContainer mongoDBContainer = MongoDBContainerConfig.getInstance();
+
     static {
         postgreSQLContainer.start();
+        mongoDBContainer.start();
     }
 }

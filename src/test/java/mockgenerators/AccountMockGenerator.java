@@ -2,6 +2,7 @@ package mockgenerators;
 
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
 import com.PBA.budgetservice.persistance.model.Account;
+import com.PBA.budgetservice.persistance.model.CurrencyRate;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 
 import java.util.*;
@@ -13,7 +14,7 @@ public class AccountMockGenerator {
         return Account.builder()
                 .id(new Random().nextLong())
                 .userUid(UUID.randomUUID())
-                .currency(getRandomCurrency())
+                .currency(UUID.randomUUID().toString())
                 .build();
     }
 
@@ -23,16 +24,29 @@ public class AccountMockGenerator {
                 .collect(Collectors.toList());
     }
 
+    public static AccountCreateRequest generateMockAccountCreateRequest(List<CurrencyRate> currencyRates) {
+        return AccountCreateRequest.builder()
+                .currency(getRandomCurrency(currencyRates))
+                .build();
+    }
+
     public static AccountCreateRequest generateMockAccountCreateRequest() {
         return AccountCreateRequest.builder()
-                .currency(getRandomCurrency())
+                .currency(UUID.randomUUID().toString())
+                .build();
+    }
+
+    public static AccountDto generateMockAccountDto(List<CurrencyRate> currencyRates) {
+        return AccountDto.builder()
+                .userUid(UUID.randomUUID())
+                .currency(getRandomCurrency(currencyRates))
                 .build();
     }
 
     public static AccountDto generateMockAccountDto() {
         return AccountDto.builder()
                 .userUid(UUID.randomUUID())
-                .currency(getRandomCurrency())
+                .currency(UUID.randomUUID().toString())
                 .build();
     }
 
@@ -44,9 +58,11 @@ public class AccountMockGenerator {
                 .build();
     }
 
-    private static String getRandomCurrency() {
-        List<Currency> currencies = new ArrayList<>(Currency.getAvailableCurrencies());
-        Collections.shuffle(currencies);
-        return currencies.stream().findFirst().get().toString();
+    private static String getRandomCurrency(List<CurrencyRate> currencyRates) {
+        if (currencyRates.isEmpty()) {
+            return "";
+        }
+        Collections.shuffle(currencyRates);
+        return currencyRates.get(0).getCode();
     }
 }

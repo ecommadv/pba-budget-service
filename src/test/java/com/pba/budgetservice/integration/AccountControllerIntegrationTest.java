@@ -7,6 +7,8 @@ import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
+import com.PBA.budgetservice.persistance.repository.CurrencyRateDao;
+import com.PBA.budgetservice.scheduler.CurrencyScheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import mockgenerators.AccountMockGenerator;
@@ -33,7 +35,13 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
     private AccountDao accountDao;
 
     @Autowired
+    private CurrencyRateDao currencyRateDao;
+
+    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private CurrencyScheduler currencyScheduler;
 
     @MockBean
     private UserGateway userGateway;
@@ -46,10 +54,15 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         objectMapper.registerModule(new JavaTimeModule());
     }
 
+    @BeforeEach
+    public void reloadCurrencyRates() {
+        currencyScheduler.reloadCurrencyRates();
+    }
+
     @Test
     public void testCreateAccount() throws Exception {
         // given
-        AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
+        AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest(currencyRateDao.getAll());
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
         String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
@@ -75,7 +88,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     public void testCreateAccountWhichAlreadyExists() throws Exception {
         // given
-        AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
+        AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest(currencyRateDao.getAll());
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
         String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
@@ -97,6 +110,34 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
                 ErrorCodes.ACCOUNT_ALREADY_EXISTS,
                 String.format("Account with user uid %s and currency %s already exists",
                         userUid,
+                        accountCreateRequest.getCurrency())
+        );
+        assertEquals(expectedErrors, apiExceptionResponse.errors());
+    }
+
+    @Test
+    public void testCreateAccountWithNonexistentCurrency() throws Exception {
+        // given
+        AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
+        String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
+        String authHeader = "Bearer token";
+        UUID userUid = UUID.randomUUID();
+        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
+
+        // when
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(accountCreateRequestJSON)
+                        .header("Authorization", authHeader))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        String apiExceptionResponseJSON = result.getResponse().getContentAsString();
+        ApiExceptionResponse apiExceptionResponse = objectMapper.readValue(apiExceptionResponseJSON, ApiExceptionResponse.class);
+
+        // then
+        Map<String, String> expectedErrors = Map.of(
+                ErrorCodes.CURRENCY_RATE_NOT_FOUND,
+                String.format("Currency rate with code %s does not exist",
                         accountCreateRequest.getCurrency())
         );
         assertEquals(expectedErrors, apiExceptionResponse.errors());
