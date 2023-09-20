@@ -38,7 +38,7 @@ public class AccountFacadeUnitTest {
     private CurrencyService currencyService;
 
     @Test
-    public void testAddIncomeRequest() {
+    public void testCreateAccount() {
         // given
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
         Account account = AccountMockGenerator.generateMockAccount();
