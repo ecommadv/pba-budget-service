@@ -16,8 +16,8 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    public ResponseEntity<AccountDto> createAccount(AccountCreateRequest accountCreateRequest) {
-        AccountDto accountDto = accountFacade.createAccount(accountCreateRequest);
+    public ResponseEntity<AccountDto> createAccount(AccountCreateRequest accountCreateRequest, String authHeader) {
+        AccountDto accountDto = accountFacade.createAccount(accountCreateRequest, authHeader);
         return new ResponseEntity<>(accountDto, HttpStatus.CREATED);
     }
 }

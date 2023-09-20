@@ -2,6 +2,7 @@ package unit;
 
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
 import com.PBA.budgetservice.facade.AccountFacadeImpl;
+import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.AccountMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,18 +30,25 @@ public class AccountFacadeUnitTest {
     @Mock
     private AccountMapper accountMapper;
 
+    @Mock
+    private UserGateway userGateway;
+
     @Test
     public void testAddIncomeRequest() {
         // given
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
         Account account = AccountMockGenerator.generateMockAccount();
         AccountDto accountDto = AccountMockGenerator.generateMockAccountDto();
-        when(accountMapper.toAccount(accountCreateRequest)).thenReturn(account);
+        String authHeader = "Bearer token";
+        UUID userUid = UUID.randomUUID();
+
+        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
+        when(accountMapper.toAccount(accountCreateRequest, userUid)).thenReturn(account);
         when(accountService.addAccount(account)).thenReturn(account);
         when(accountMapper.toAccountDto(account)).thenReturn(accountDto);
 
         // when
-        AccountDto result = accountFacade.createAccount(accountCreateRequest);
+        AccountDto result = accountFacade.createAccount(accountCreateRequest, authHeader);
 
         // then
         assertEquals(result, accountDto);

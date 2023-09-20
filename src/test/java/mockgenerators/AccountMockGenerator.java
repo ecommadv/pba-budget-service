@@ -25,7 +25,6 @@ public class AccountMockGenerator {
 
     public static AccountCreateRequest generateMockAccountCreateRequest() {
         return AccountCreateRequest.builder()
-                .userUid(UUID.randomUUID())
                 .currency(getRandomCurrency())
                 .build();
     }
@@ -34,6 +33,14 @@ public class AccountMockGenerator {
         return AccountDto.builder()
                 .userUid(UUID.randomUUID())
                 .currency(getRandomCurrency())
+                .build();
+    }
+
+    public static Account generateMockAccount(String currency, UUID userUid) {
+        return Account.builder()
+                .id(new Random().nextLong())
+                .userUid(userUid)
+                .currency(currency)
                 .build();
     }
 
