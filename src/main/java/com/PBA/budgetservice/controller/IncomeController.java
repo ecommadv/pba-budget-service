@@ -32,8 +32,7 @@ public interface IncomeController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping
-    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserUidAndCurrency(@RequestParam("userUid") UUID userUid,
-                                                                             @RequestParam("currency") String currency);
+    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserAndCurrency(@RequestParam("currency") String currency);
 
     @Operation(summary = "Updates an income and persists the changes in the system.")
     @ApiResponses(value = {

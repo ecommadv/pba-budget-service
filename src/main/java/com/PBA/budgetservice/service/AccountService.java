@@ -9,4 +9,5 @@ public interface AccountService {
     public Account deleteAccountById(Long id);
     public Account getByUserUidAndCurrency(UUID userUid, String currency);
     public boolean accountExists(UUID userUid, String currency);
+    public Account getById(Long accountId);
 }

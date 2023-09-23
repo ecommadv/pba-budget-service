@@ -1,7 +1,6 @@
 package com.PBA.budgetservice.controller;
 
 import com.PBA.budgetservice.facade.ExpenseFacade;
-import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
@@ -34,8 +33,8 @@ public class ExpenseControllerImpl implements ExpenseController {
     }
 
     @Override
-    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserUidAndCurrency(UUID userUid, String currency) {
-        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpensesByUserUidAndCurrency(userUid, currency);
+    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserAndCurrency(String currency) {
+        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpensesByUserAndCurrency(currency);
         return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
     }
 

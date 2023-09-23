@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserGatewayImpl implements UserGateway {
     private final WebClient webClient;
 
-    @Value("${user.get.url}")
+    @Value("${auth.get_user_url}")
     private String getUserUrl;
 
     public UserGatewayImpl(WebClient webClient) {

@@ -1,14 +1,14 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
 import com.PBA.budgetservice.facade.AccountFacadeImpl;
-import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.AccountMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
+import com.PBA.budgetservice.security.JwtSecurityService;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
-import mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,10 +32,10 @@ public class AccountFacadeUnitTest {
     private AccountMapper accountMapper;
 
     @Mock
-    private UserGateway userGateway;
+    private CurrencyService currencyService;
 
     @Mock
-    private CurrencyService currencyService;
+    private JwtSecurityService jwtSecurityService;
 
     @Test
     public void testCreateAccount() {
@@ -43,17 +43,16 @@ public class AccountFacadeUnitTest {
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
         Account account = AccountMockGenerator.generateMockAccount();
         AccountDto accountDto = AccountMockGenerator.generateMockAccountDto();
-        String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
 
-        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
         when(accountMapper.toAccount(accountCreateRequest, userUid)).thenReturn(account);
         when(accountService.addAccount(account)).thenReturn(account);
         when(accountMapper.toAccountDto(account)).thenReturn(accountDto);
         when(currencyService.currencyRateWithCodeExists(accountCreateRequest.getCurrency())).thenReturn(true);
+        when(jwtSecurityService.getCurrentUserUid()).thenReturn(userUid);
 
         // when
-        AccountDto result = accountFacade.createAccount(accountCreateRequest, authHeader);
+        AccountDto result = accountFacade.createAccount(accountCreateRequest);
 
         // then
         assertEquals(result, accountDto);

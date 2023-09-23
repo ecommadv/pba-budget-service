@@ -1,4 +1,4 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

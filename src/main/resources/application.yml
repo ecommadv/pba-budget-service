@@ -12,9 +12,9 @@ server:
   servlet:
     context-path: "/api"
   port: 8082
-user:
-  get:
-    url: http://localhost:8080/api/user
+auth:
+  base_url: http://localhost:8080
+  get_user_url: http://localhost:8080/api/user
 currency:
   rates:
     url: https://www.bnr.ro/nbrfxrates.xml

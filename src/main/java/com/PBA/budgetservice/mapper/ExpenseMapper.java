@@ -13,10 +13,11 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Mapper
 public interface ExpenseMapper {
-    public Account toAccount(ExpenseCreateRequest expenseCreateRequest);
+    public Account toAccount(ExpenseCreateRequest expenseCreateRequest, UUID userUid);
 
     @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
     public Expense toExpense(ExpenseCreateRequest expenseCreateRequest);

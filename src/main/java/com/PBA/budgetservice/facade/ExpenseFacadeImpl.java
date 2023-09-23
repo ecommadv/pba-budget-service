@@ -1,9 +1,15 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.exceptions.AuthorizationException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
+import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
+import com.PBA.budgetservice.security.JwtSecurityService;
 import com.PBA.budgetservice.service.AccountService;
+import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
 import com.PBA.budgetservice.service.ExpenseService;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
@@ -23,17 +29,23 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     private final ExpenseCategoryService expenseCategoryService;
     private final AccountService accountService;
     private final ExpenseMapper expenseMapper;
+    private final CurrencyService currencyService;
+    private final JwtSecurityService jwtSecurityService;
 
-    public ExpenseFacadeImpl(ExpenseService expenseService, ExpenseCategoryService expenseCategoryService, AccountService accountService, ExpenseMapper expenseMapper) {
+    public ExpenseFacadeImpl(ExpenseService expenseService, ExpenseCategoryService expenseCategoryService, AccountService accountService, ExpenseMapper expenseMapper, UserGateway userGateway, CurrencyService currencyService, JwtSecurityService jwtSecurityService) {
         this.expenseService = expenseService;
         this.expenseCategoryService = expenseCategoryService;
         this.accountService = accountService;
         this.expenseMapper = expenseMapper;
+        this.jwtSecurityService = jwtSecurityService;
+        this.currencyService = currencyService;
     }
 
     @Override
     public ExpenseDto addExpense(ExpenseCreateRequest expenseCreateRequest) {
-        Account account = expenseMapper.toAccount(expenseCreateRequest);
+        this.validateCurrencyCodeExists(expenseCreateRequest.getCurrency());
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        Account account = expenseMapper.toAccount(expenseCreateRequest, userUid);
         Expense expense = expenseMapper.toExpense(expenseCreateRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -48,7 +60,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Expense expenseToUpdate = expenseService.getByUid(uid);
+        this.validateExpenseIsOwnedByUser(expenseToUpdate, userUid);
         ExpenseCategory expenseCategory = this.getUpdatedExpenseCategory(expenseUpdateRequest, expenseToUpdate);
 
         Expense updatedExpense = expenseMapper.toExpense(expenseUpdateRequest, expenseToUpdate, expenseCategory);
@@ -58,7 +72,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public void deleteExpenseByUid(UUID uid) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Expense expenseToDelete = expenseService.getByUid(uid);
+        this.validateExpenseIsOwnedByUser(expenseToDelete, userUid);
         expenseService.deleteById(expenseToDelete.getId());
     }
 
@@ -69,7 +85,8 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     }
 
     @Override
-    public List<ExpenseDto> getAllExpensesByUserUidAndCurrency(UUID userUid, String currency) {
+    public List<ExpenseDto> getAllExpensesByUserAndCurrency(String currency) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Account account = accountService.getByUserUidAndCurrency(userUid, currency);
         List<Expense> expenses = expenseService.getByAccountId(account.getId());
 
@@ -81,5 +98,21 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
         return expenseUpdateRequest.getCategoryUid() == null
                 ? expenseCategoryService.getById(expenseToUpdate.getCategoryId())
                 : expenseCategoryService.getByUid(expenseUpdateRequest.getCategoryUid());
+    }
+
+    private void validateExpenseIsOwnedByUser(Expense expense, UUID userUid) {
+        Account account = accountService.getById(expense.getAccountId());
+        if (!account.getUserUid().equals(userUid)) {
+            throw new AuthorizationException();
+        }
+    }
+
+    private void validateCurrencyCodeExists(String code) {
+        if (!currencyService.currencyRateWithCodeExists(code)) {
+            throw new EntityNotFoundException(
+                    String.format("Currency rate with code %s does not exist", code),
+                    ErrorCodes.CURRENCY_RATE_NOT_FOUND
+            );
+        }
     }
 }

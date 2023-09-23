@@ -1,4 +1,4 @@
-package mockgenerators;
+package com.pba.budgetservice.mockgenerators;
 
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 

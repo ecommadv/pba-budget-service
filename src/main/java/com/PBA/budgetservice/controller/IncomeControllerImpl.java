@@ -28,8 +28,8 @@ public class IncomeControllerImpl implements IncomeController {
     }
 
     @Override
-    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserUidAndCurrency(UUID userUid, String currency) {
-        List<IncomeDto> incomeDtos = incomeFacade.getAllIncomesByUserUidAndCurrency(userUid, currency);
+    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserAndCurrency(String currency) {
+        List<IncomeDto> incomeDtos = incomeFacade.getAllIncomesByUserAndCurrency(currency);
         return new ResponseEntity<>(incomeDtos, HttpStatus.OK);
     }
 

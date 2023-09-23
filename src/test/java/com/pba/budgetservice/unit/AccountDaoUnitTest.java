@@ -1,4 +1,4 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.repository.UtilsFactory;
@@ -6,7 +6,7 @@ import com.PBA.budgetservice.persistance.repository.mappers.AccountRowMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDaoImpl;
 import com.PBA.budgetservice.persistance.repository.sql.AccountSqlProvider;
-import mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

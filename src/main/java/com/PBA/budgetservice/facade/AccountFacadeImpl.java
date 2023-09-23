@@ -8,6 +8,7 @@ import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.AccountMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
+import com.PBA.budgetservice.security.JwtSecurityService;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,19 @@ import java.util.UUID;
 public class AccountFacadeImpl implements AccountFacade {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
-    private final UserGateway userGateway;
     private final CurrencyService currencyService;
+    private final JwtSecurityService jwtSecurityService;
 
-    public AccountFacadeImpl(AccountService accountService, AccountMapper accountMapper, UserGateway userGateway, CurrencyService currencyService) {
+    public AccountFacadeImpl(AccountService accountService, AccountMapper accountMapper, UserGateway userGateway, CurrencyService currencyService, JwtSecurityService jwtSecurityService) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
-        this.userGateway = userGateway;
+        this.jwtSecurityService = jwtSecurityService;
         this.currencyService = currencyService;
     }
 
     @Override
-    public AccountDto createAccount(AccountCreateRequest accountCreateRequest, String authHeader) {
-        UUID userUid = userGateway.getUserUidFromAuthHeader(authHeader);
+    public AccountDto createAccount(AccountCreateRequest accountCreateRequest) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         this.validateCurrencyCodeExists(accountCreateRequest.getCurrency());
         this.validateAccountAlreadyExists(accountCreateRequest, userUid);
         Account accountToCreate = accountMapper.toAccount(accountCreateRequest, userUid);

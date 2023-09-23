@@ -3,7 +3,6 @@ package com.pba.budgetservice.integration;
 import com.PBA.budgetservice.controller.advice.ApiExceptionResponse;
 import com.PBA.budgetservice.controller.request.AccountCreateRequest;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
-import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
@@ -11,25 +10,34 @@ import com.PBA.budgetservice.persistance.repository.CurrencyRateDao;
 import com.PBA.budgetservice.scheduler.CurrencyScheduler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import mockgenerators.AccountMockGenerator;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
+@ActiveProfiles({"default", "test"})
+@WireMockTest(httpPort = 8089)
 public class AccountControllerIntegrationTest extends BaseControllerIntegrationTest {
     @Autowired
     private AccountDao accountDao;
@@ -42,9 +50,6 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Autowired
     private CurrencyScheduler currencyScheduler;
-
-    @MockBean
-    private UserGateway userGateway;
 
     private ObjectMapper objectMapper;
 
@@ -66,7 +71,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
         String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
-        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
+        this.stubUserDtoResponse(userUid);
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/account")
@@ -92,7 +97,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
         String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
-        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
+        this.stubUserDtoResponse(userUid);
         this.saveAccountWithCurrencyAndUserUid(accountCreateRequest.getCurrency(), userUid);
 
         // when
@@ -122,7 +127,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
         String authHeader = "Bearer token";
         UUID userUid = UUID.randomUUID();
-        when(userGateway.getUserUidFromAuthHeader(authHeader)).thenReturn(userUid);
+        this.stubUserDtoResponse(userUid);
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/account")
@@ -146,5 +151,17 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
     private void saveAccountWithCurrencyAndUserUid(String currency, UUID userUid) {
         Account account = AccountMockGenerator.generateMockAccount(currency, userUid);
         accountDao.save(account);
+    }
+
+    private void stubUserDtoResponse(UUID userUid) throws IOException {
+        String mockUserResponseJSON = String.format(getFileContent("classpath:mock_user_response.json"), userUid);
+        stubFor(get(urlEqualTo("/api/user"))
+                .willReturn(ok()
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(mockUserResponseJSON)));
+    }
+
+    private String getFileContent(String path) throws IOException {
+        return FileUtils.readFileToString(ResourceUtils.getFile(path), StandardCharsets.UTF_8);
     }
 }

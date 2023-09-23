@@ -4,6 +4,7 @@ import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
+import org.flywaydb.core.api.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean accountExists(UUID userUid, String currency) {
         return accountDao.getByUserUidAndCurrency(Pair.of(userUid, currency)).isPresent();
+    }
+
+    @Override
+    public Account getById(Long accountId) {
+        return accountDao.getById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Account does not exist",
+                        ErrorCodes.ACCOUNT_NOT_FOUND
+                ));
     }
 }

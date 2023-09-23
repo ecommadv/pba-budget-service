@@ -3,7 +3,7 @@ package com.pba.budgetservice.integration;
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.model.CurrencyRate;
 import com.PBA.budgetservice.persistance.repository.CurrencyRateDao;
-import mockgenerators.CurrencyRateMockGenerator;
+import com.pba.budgetservice.mockgenerators.CurrencyRateMockGenerator;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

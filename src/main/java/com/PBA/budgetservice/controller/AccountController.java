@@ -20,6 +20,5 @@ public interface AccountController {
             @ApiResponse(responseCode = "400", description = "Bad Request")
     })
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountCreateRequest accountCreateRequest,
-                                                    @RequestHeader("Authorization") String authHeader);
+    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountCreateRequest accountCreateRequest);
 }

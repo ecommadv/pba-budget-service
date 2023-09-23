@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller.advice;
 
+import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.BudgetException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ApiExceptionResponse> handleBudgetException(BudgetException exception) {
         ApiExceptionResponse exceptionResponse = new ApiExceptionResponse(ZonedDateTime.now(), Map.of(exception.getErrorCode(), exception.getMessage()));
         return new ResponseEntity<>(exceptionResponse, exception.getHttpStatus());
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<Void> handleAuthorizationException(AuthorizationException exception) {
+        return new ResponseEntity<>(exception.getHttpStatus());
     }
 
     private Map<String, String> getErrorMap(MethodArgumentNotValidException exception) {

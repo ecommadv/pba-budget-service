@@ -1,10 +1,10 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
 import com.PBA.budgetservice.service.ExpenseCategoryServiceImpl;
-import mockgenerators.ExpenseCategoryMockGenerator;
+import com.pba.budgetservice.mockgenerators.ExpenseCategoryMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
