@@ -1,9 +1,9 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.service.AccountServiceImpl;
-import mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -32,10 +32,6 @@ public class IncomeCreateRequest {
     @Schema(example = "RON")
     private String currency;
 
-    @NotNull(message = "{userUid.notnull}")
-    @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    private UUID userUid;
-
     @NotNull(message = "{categoryUid.notnull}")
     @Schema(example = "4gf23f64-2341-2314-a4fd-5a432g33dab4")
     private UUID categoryUid;

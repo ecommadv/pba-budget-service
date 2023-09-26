@@ -1,13 +1,13 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
 import com.PBA.budgetservice.service.IncomeServiceImpl;
-import mockgenerators.AccountMockGenerator;
-import mockgenerators.IncomeCategoryMockGenerator;
-import mockgenerators.IncomeMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.IncomeCategoryMockGenerator;
+import com.pba.budgetservice.mockgenerators.IncomeMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

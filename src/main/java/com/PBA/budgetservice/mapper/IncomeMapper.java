@@ -13,6 +13,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Mapper
 public interface IncomeMapper {
@@ -25,7 +26,7 @@ public interface IncomeMapper {
             expression = "java(incomeUpdateRequest.getDescription() == null ? income.getDescription() : incomeUpdateRequest.getDescription())")
     public Income toIncome(@Context IncomeUpdateRequest incomeUpdateRequest, Income income);
 
-    public Account toAccount(IncomeCreateRequest incomeRequest);
+    public Account toAccount(IncomeCreateRequest incomeRequest, UUID userUid);
 
     @Mapping(target = "categoryName", expression = "java(categoryIdToNameMapping.get(income.getCategoryId()))")
     public IncomeDto toIncomeDto(Income income,

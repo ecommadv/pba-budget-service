@@ -1,4 +1,4 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.model.Account;
@@ -8,9 +8,9 @@ import com.PBA.budgetservice.persistance.repository.ExpenseDaoImpl;
 import com.PBA.budgetservice.persistance.repository.UtilsFactory;
 import com.PBA.budgetservice.persistance.repository.mappers.ExpenseRowMapper;
 import com.PBA.budgetservice.persistance.repository.sql.ExpenseSqlProvider;
-import mockgenerators.AccountMockGenerator;
-import mockgenerators.ExpenseCategoryMockGenerator;
-import mockgenerators.ExpenseMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.ExpenseCategoryMockGenerator;
+import com.pba.budgetservice.mockgenerators.ExpenseMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

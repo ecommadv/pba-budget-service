@@ -3,7 +3,7 @@ package com.pba.budgetservice.integration;
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.repository.IncomeCategoryDao;
-import mockgenerators.IncomeCategoryMockGenerator;
+import com.pba.budgetservice.mockgenerators.IncomeCategoryMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -25,4 +25,12 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .mapToLong((currencyRate) -> currencyRateDao.deleteById(currencyRate.getId()))
                 .reduce(0, Long::sum);
     }
+
+    @Override
+    public boolean currencyRateWithCodeExists(String code) {
+        return currencyRateDao
+                .getAll()
+                .stream()
+                .anyMatch(currencyRate -> currencyRate.getCode().equals(code));
+    }
 }

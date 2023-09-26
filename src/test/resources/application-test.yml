@@ -1,0 +1,3 @@
+auth:
+  base_url: http://localhost:8089
+  get_user_url: http://localhost:8089/api/user

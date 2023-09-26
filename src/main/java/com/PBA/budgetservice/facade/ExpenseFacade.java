@@ -13,5 +13,5 @@ public interface ExpenseFacade {
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid);
     public void deleteExpenseByUid(UUID uid);
     public List<ExpenseCategoryDto> getAllExpenseCategories();
-    public List<ExpenseDto> getAllExpensesByUserUidAndCurrency(UUID userUid, String currency);
+    public List<ExpenseDto> getAllExpensesByUserAndCurrency(String currency);
 }

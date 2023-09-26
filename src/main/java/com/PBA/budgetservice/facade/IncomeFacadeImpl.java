@@ -1,12 +1,18 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.exceptions.AuthorizationException;
+import com.PBA.budgetservice.exceptions.EntityNotFoundException;
+import com.PBA.budgetservice.exceptions.ErrorCodes;
+import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
+import com.PBA.budgetservice.security.JwtSecurityService;
 import com.PBA.budgetservice.service.AccountService;
+import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
 import com.PBA.budgetservice.service.IncomeService;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
@@ -23,17 +29,23 @@ public class IncomeFacadeImpl implements IncomeFacade {
     private final AccountService accountService;
     private final IncomeCategoryService incomeCategoryService;
     private final IncomeMapper incomeMapper;
+    private final CurrencyService currencyService;
+    private final JwtSecurityService jwtSecurityService;
 
-    public IncomeFacadeImpl(IncomeService incomeService, AccountService accountService, IncomeCategoryService incomeCategoryService, IncomeMapper incomeMapper) {
+    public IncomeFacadeImpl(IncomeService incomeService, AccountService accountService, IncomeCategoryService incomeCategoryService, IncomeMapper incomeMapper, UserGateway userGateway, CurrencyService currencyService, JwtSecurityService jwtSecurityService) {
         this.incomeService = incomeService;
         this.accountService = accountService;
         this.incomeCategoryService = incomeCategoryService;
         this.incomeMapper = incomeMapper;
+        this.currencyService = currencyService;
+        this.jwtSecurityService = jwtSecurityService;
     }
 
     @Override
     public IncomeDto addIncome(IncomeCreateRequest incomeRequest) {
-        Account account = incomeMapper.toAccount(incomeRequest);
+        this.validateCurrencyCodeExists(incomeRequest.getCurrency());
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        Account account = incomeMapper.toAccount(incomeRequest, userUid);
         Income income = incomeMapper.toIncome(incomeRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -48,7 +60,9 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Income incomeToUpdate = incomeService.getIncomeByUid(uid);
+        this.validateIncomeIsOwnedByUser(incomeToUpdate, userUid);
         IncomeCategory currentIncomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToUpdate.getCategoryId());
 
         UUID categoryUid = incomeUpdateRequest.getCategoryUid() == null ? currentIncomeCategory.getUid() : incomeUpdateRequest.getCategoryUid();
@@ -63,7 +77,9 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public void deleteIncomeByUid(UUID uid) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
+        this.validateIncomeIsOwnedByUser(incomeToDelete, userUid);
         incomeService.deleteIncomeById(incomeToDelete.getId());
     }
 
@@ -74,11 +90,28 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public List<IncomeDto> getAllIncomesByUserUidAndCurrency(UUID userUid, String currency) {
+    public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency) {
+        UUID userUid = jwtSecurityService.getCurrentUserUid();
         Account account = accountService.getByUserUidAndCurrency(userUid, currency);
         List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
+    }
+
+    private void validateCurrencyCodeExists(String code) {
+        if (!currencyService.currencyRateWithCodeExists(code)) {
+            throw new EntityNotFoundException(
+                    String.format("Currency rate with code %s does not exist", code),
+                    ErrorCodes.CURRENCY_RATE_NOT_FOUND
+            );
+        }
+    }
+
+    private void validateIncomeIsOwnedByUser(Income income, UUID userUid) {
+        Account account = accountService.getById(income.getAccountId());
+        if (!account.getUserUid().equals(userUid)) {
+            throw new AuthorizationException();
+        }
     }
 }

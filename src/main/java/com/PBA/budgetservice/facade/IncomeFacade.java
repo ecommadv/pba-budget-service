@@ -13,5 +13,5 @@ public interface IncomeFacade {
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid);
     public void deleteIncomeByUid(UUID uid);
     public List<IncomeCategoryDto> getAllIncomeCategories();
-    public List<IncomeDto> getAllIncomesByUserUidAndCurrency(UUID userUid, String currency);
+    public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency);
 }

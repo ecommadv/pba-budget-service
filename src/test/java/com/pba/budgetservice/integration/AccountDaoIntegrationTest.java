@@ -3,7 +3,7 @@ package com.pba.budgetservice.integration;
 import com.PBA.budgetservice.exceptions.BudgetDaoException;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
-import mockgenerators.AccountMockGenerator;
+import com.pba.budgetservice.mockgenerators.AccountMockGenerator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 public class AccountDaoIntegrationTest extends BaseJdbcDaoIntegrationTest {
     @Autowired
     private AccountDao accountDao;

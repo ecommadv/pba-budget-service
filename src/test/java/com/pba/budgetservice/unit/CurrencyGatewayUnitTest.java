@@ -1,4 +1,4 @@
-package unit;
+package com.pba.budgetservice.unit;
 
 import com.PBA.budgetservice.gateway.CurrencyGatewayImpl;
 import org.junit.jupiter.api.Test;

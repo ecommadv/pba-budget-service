@@ -41,8 +41,7 @@ public interface ExpenseController {
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
     @GetMapping
-    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserUidAndCurrency(@RequestParam(name = "userUid") UUID userUid,
-                                                                               @RequestParam(name = "currency") String currency);
+    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserAndCurrency(@RequestParam(name = "currency") String currency);
 
     @Operation(summary = "Deletes the expense with the given uid from the system, if it exists.")
     @ApiResponses(value = {
