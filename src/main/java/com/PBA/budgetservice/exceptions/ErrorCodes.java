@@ -10,4 +10,5 @@ public class ErrorCodes {
     public static final String ENTITY_NOT_FOUND = "entity.not.found";
     public static final String CURRENCY_RATE_NOT_FOUND = "currency.rate.not.found";
     public static final String ACCOUNT_ALREADY_EXISTS = "account.already.exists";
+    public static final String INVALID_ARGS_TYPE = "invalid.args.type";
 }
