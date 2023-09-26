@@ -155,6 +155,7 @@ public class IncomeDaoUnitTest {
                 newIncome.getUid(),
                 newIncome.getAccountId(),
                 newIncome.getCategoryId(),
+                newIncome.getCreatedAt(),
                 newIncome.getId())).thenReturn(1);
 
         // when
@@ -180,6 +181,7 @@ public class IncomeDaoUnitTest {
                 absentIncome.getUid(),
                 absentIncome.getAccountId(),
                 absentIncome.getCategoryId(),
+                absentIncome.getCreatedAt(),
                 absentIncome.getId())).thenReturn(0);
 
         assertThatThrownBy(() -> incomeDao.update(absentIncome, id))

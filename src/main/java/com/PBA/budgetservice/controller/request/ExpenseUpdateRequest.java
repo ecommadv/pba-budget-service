@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -36,4 +38,9 @@ public class ExpenseUpdateRequest {
     @NotNull(message = "{categoryUid.notnull}")
     @Schema(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID categoryUid;
+
+    @NotNull(message = "{createdAt.notnull}")
+    @Schema(example = "2023-11-07 18:20")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime createdAt;
 }

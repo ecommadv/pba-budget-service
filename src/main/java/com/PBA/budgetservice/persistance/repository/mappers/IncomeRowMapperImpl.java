@@ -20,6 +20,7 @@ public class IncomeRowMapperImpl implements IncomeRowMapper {
                 .uid(UUID.fromString(rs.getString("uid")))
                 .accountId(rs.getLong("account_id"))
                 .categoryId(rs.getLong("category_id"))
+                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 }

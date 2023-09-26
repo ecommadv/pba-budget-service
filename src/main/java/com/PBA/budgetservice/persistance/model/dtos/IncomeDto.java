@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -28,4 +29,7 @@ public class IncomeDto {
 
     @Schema(example = "cat1")
     private String categoryName;
+
+    @Schema(example = "2023-11-08T18:30:00")
+    private LocalDateTime createdAt;
 }
