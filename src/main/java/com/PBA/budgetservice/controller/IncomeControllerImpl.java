@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,5 +50,17 @@ public class IncomeControllerImpl implements IncomeController {
     public ResponseEntity<List<IncomeCategoryDto>> getAllIncomeCategories() {
         List<IncomeCategoryDto> incomeCategoryDtos = incomeFacade.getAllIncomeCategories();
         return new ResponseEntity<>(incomeCategoryDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomesByCategoryName(String categoryName) {
+        List<IncomeDto> incomes = incomeFacade.getAllIncomesByUserAndCategoryName(categoryName);
+        return new ResponseEntity<>(incomes, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomesByDate(LocalDateTime after, LocalDateTime before) {
+        List<IncomeDto> incomes = incomeFacade.getAllIncomesByUserAndDate(after, before);
+        return new ResponseEntity<>(incomes, HttpStatus.OK);
     }
 }

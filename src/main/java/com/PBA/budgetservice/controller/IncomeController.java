@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +33,7 @@ public interface IncomeController {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
-    @GetMapping
+    @GetMapping("/currency")
     public ResponseEntity<List<IncomeDto>> getAllIncomesByUserAndCurrency(@RequestParam("currency") String currency);
 
     @Operation(summary = "Updates an income and persists the changes in the system.")
@@ -58,4 +60,20 @@ public interface IncomeController {
     })
     @GetMapping("/category")
     public ResponseEntity<List<IncomeCategoryDto>> getAllIncomeCategories();
+
+    @Operation(summary = "Provides a list of all the incomes corresponding to a logged in user, filtered by income category name.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    @GetMapping("/category-name")
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomesByCategoryName(@RequestParam(name = "name") String categoryName);
+
+    @Operation(summary = "Provides a list of all the incomes corresponding to a logged in user, filtered by date.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
+    @GetMapping("/date")
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomesByDate(@RequestParam(name = "after", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime after,
+                                                                   @RequestParam(name = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime before);
 }

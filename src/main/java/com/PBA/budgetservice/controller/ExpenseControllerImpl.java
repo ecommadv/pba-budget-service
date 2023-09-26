@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,5 +49,23 @@ public class ExpenseControllerImpl implements ExpenseController {
     public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories() {
         List<ExpenseCategoryDto> expenseCategoryDtos = expenseFacade.getAllExpenseCategories();
         return new ResponseEntity<>(expenseCategoryDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByName(String name) {
+        List<ExpenseDto> expenses = expenseFacade.getAllUserExpensesByName(name);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByCategoryName(String categoryName) {
+        List<ExpenseDto> expenses = expenseFacade.getAllUserExpensesByCategoryName(categoryName);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByDate(LocalDateTime after, LocalDateTime before) {
+        List<ExpenseDto> expenses = expenseFacade.getAllExpensesByUserAndDate(after, before);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 }
