@@ -8,15 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class InterceptorConfig implements WebMvcConfigurer {
     private static final String EXPENSE_CATEGORY_ENDPOINT = "/expense/category";
     private static final String INCOME_CATEGORY_ENDPOINT = "/income/category";
-    private final JwtValidationInterceptor jwtValidationInterceptor;
+    private static final String[] EXCLUDED_ENDPOINTS = {EXPENSE_CATEGORY_ENDPOINT, INCOME_CATEGORY_ENDPOINT};
+    private final JwtHeaderHandlerInterceptor jwtHeaderHandlerInterceptor;
 
-    public InterceptorConfig(JwtValidationInterceptor jwtValidationInterceptor) {
-        this.jwtValidationInterceptor = jwtValidationInterceptor;
+    public InterceptorConfig(JwtHeaderHandlerInterceptor jwtHeaderHandlerInterceptor) {
+        this.jwtHeaderHandlerInterceptor = jwtHeaderHandlerInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtValidationInterceptor)
-                .excludePathPatterns(EXPENSE_CATEGORY_ENDPOINT, INCOME_CATEGORY_ENDPOINT);
+        registry.addInterceptor(jwtHeaderHandlerInterceptor)
+                .excludePathPatterns(EXCLUDED_ENDPOINTS);
     }
 }

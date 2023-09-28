@@ -39,6 +39,7 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.pba.budgetservice.mockgenerators.MockToken.MOCK_USER_ACCESS_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,7 +85,7 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         this.addMockAccounts(accounts);
         ExpenseCreateRequest expenseCreateRequest = ExpenseMockGenerator.generateMockExpenseCreateRequest(expenseCategories, currencyRateDao.getAll());
         String expenseRequestJSON = objectMapper.writeValueAsString(expenseCreateRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = UUID.randomUUID();
         this.stubUserDtoResponse(userUid);
 
@@ -121,9 +122,9 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         });
         this.addMockExpenses(expenses);
 
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(userUid);
-        String getEndpoint = String.format("/expense?userUid=%s&currency=%s", userUid.toString(), currency);
+        String getEndpoint = String.format("/expense/currency?currency=%s", currency);
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getEndpoint)
@@ -145,9 +146,9 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         // given
         UUID nonexistentUid = UUID.randomUUID();
         String nonexistentCurrency = "RON";
-        String getEndpoint = String.format("/expense?userUid=%s&currency=%s", nonexistentUid, nonexistentCurrency);
+        String getEndpoint = String.format("/expense/currency?&currency=%s", nonexistentCurrency);
 
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(nonexistentUid);
 
         // when
@@ -177,7 +178,7 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         ExpenseUpdateRequest expenseUpdateRequest = ExpenseMockGenerator.generateMockExpenseUpdateRequest(expenseCategories);
         ExpenseCategory expenseUpdateRequestCategory = expenseCategoryDao.getByUid(expenseUpdateRequest.getCategoryUid()).get();
         String expenseUpdateRequestJSON = objectMapper.writeValueAsString(expenseUpdateRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         Account account = accountDao.getById(expense.getAccountId()).get();
         this.stubUserDtoResponse(account.getUserUid());
 
@@ -209,7 +210,7 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         this.addMockAccounts(accounts);
         Expense expense = ExpenseMockGenerator.generateMockExpense(expenseCategories, accountDao.getAll(), currencyRateDao.getAll());
         Expense savedExpense = expenseDao.save(expense);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = accountDao.getById(savedExpense.getAccountId()).get().getUserUid();
         this.stubUserDtoResponse(userUid);
         String deleteEndpoint = String.format("/expense/%s", savedExpense.getUid().toString());

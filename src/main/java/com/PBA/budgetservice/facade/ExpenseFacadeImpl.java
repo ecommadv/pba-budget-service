@@ -8,6 +8,8 @@ import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.security.JwtSecurityService;
+import com.PBA.budgetservice.security.Permission;
+import com.PBA.budgetservice.security.TokenType;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
@@ -44,9 +46,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public ExpenseDto addExpense(ExpenseCreateRequest expenseCreateRequest) {
+        jwtSecurityService.validateHasPermission(Permission.CREATE_EXPENSE);
         this.validateCurrencyCodeExists(expenseCreateRequest.getCurrency());
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = expenseMapper.toAccount(expenseCreateRequest, userUid);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = expenseMapper.toAccount(expenseCreateRequest, ownerUid);
         Expense expense = expenseMapper.toExpense(expenseCreateRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -61,9 +64,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.UPDATE_EXPENSE);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Expense expenseToUpdate = expenseService.getByUid(uid);
-        this.validateExpenseIsOwnedByUser(expenseToUpdate, userUid);
+        this.validateExpenseIsOwnedByUser(expenseToUpdate, ownerUid);
         ExpenseCategory expenseCategory = this.getUpdatedExpenseCategory(expenseUpdateRequest, expenseToUpdate);
 
         Expense updatedExpense = expenseMapper.toExpense(expenseUpdateRequest, expenseToUpdate, expenseCategory);
@@ -73,9 +77,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public void deleteExpenseByUid(UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.DELETE_EXPENSE);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Expense expenseToDelete = expenseService.getByUid(uid);
-        this.validateExpenseIsOwnedByUser(expenseToDelete, userUid);
+        this.validateExpenseIsOwnedByUser(expenseToDelete, ownerUid);
         expenseService.deleteById(expenseToDelete.getId());
     }
 
@@ -87,8 +92,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public List<ExpenseDto> getAllExpensesByUserAndCurrency(String currency) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
+        jwtSecurityService.validateHasPermission(Permission.GET_EXPENSES);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = accountService.getByUserUidAndCurrency(ownerUid, currency);
         List<Expense> expenses = expenseService.getByAccountId(account.getId());
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
@@ -97,8 +103,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public List<ExpenseDto> getAllUserExpensesByName(String name) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Expense> expenses = expenseService.getAllExpensesByUserUidAndExpenseName(userUid, name);
+        jwtSecurityService.validateHasPermission(Permission.GET_EXPENSES);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        List<Expense> expenses = expenseService.getAllExpensesByUserUidAndExpenseName(ownerUid, name);
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);
@@ -106,8 +113,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public List<ExpenseDto> getAllUserExpensesByCategoryName(String categoryName) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Expense> expenses = expenseService.getAllExpensesByUserUidAndCategoryName(userUid, categoryName);
+        jwtSecurityService.validateHasPermission(Permission.GET_EXPENSES);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        List<Expense> expenses = expenseService.getAllExpensesByUserUidAndCategoryName(ownerUid, categoryName);
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);
@@ -115,16 +123,17 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public List<ExpenseDto> getAllExpensesByUserAndDate(LocalDateTime after, LocalDateTime before) {
+        jwtSecurityService.validateHasPermission(Permission.GET_EXPENSES);
         if (after == null && before == null) {
             return List.of();
         }
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         List<Expense> expenses =
                 after == null
-                ? expenseService.getAllExpensesByUserUidAndDateBefore(userUid, before)
+                ? expenseService.getAllExpensesByUserUidAndDateBefore(ownerUid, before)
                 : before == null
-                    ? expenseService.getAllExpensesByUserUidAndDateAfter(userUid, after)
-                : expenseService.getAllExpensesByUserUidAndDateBetween(userUid, after, before);
+                    ? expenseService.getAllExpensesByUserUidAndDateAfter(ownerUid, after)
+                : expenseService.getAllExpensesByUserUidAndDateBetween(ownerUid, after, before);
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);

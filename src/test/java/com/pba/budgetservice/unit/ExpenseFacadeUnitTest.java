@@ -68,7 +68,7 @@ public class ExpenseFacadeUnitTest {
         when(expenseService.addExpense(expense)).thenReturn(expense);
         when(expenseMapper.toExpenseDto(expense, expenseCategory.getName())).thenReturn(expenseDto);
         when(currencyService.currencyRateWithCodeExists(expenseCreateRequest.getCurrency())).thenReturn(true);
-        when(jwtSecurityService.getCurrentUserUid()).thenReturn(userUid);
+        when(jwtSecurityService.getCurrentAccountOwnerUid()).thenReturn(userUid);
 
         // when
         ExpenseDto result = expenseFacade.addExpense(expenseCreateRequest);

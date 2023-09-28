@@ -6,12 +6,12 @@ import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.persistance.model.Account;
-import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.security.JwtSecurityService;
+import com.PBA.budgetservice.security.Permission;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
@@ -45,9 +45,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public IncomeDto addIncome(IncomeCreateRequest incomeRequest) {
+        jwtSecurityService.validateHasPermission(Permission.CREATE_INCOME);
         this.validateCurrencyCodeExists(incomeRequest.getCurrency());
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = incomeMapper.toAccount(incomeRequest, userUid);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = incomeMapper.toAccount(incomeRequest, ownerUid);
         Income income = incomeMapper.toIncome(incomeRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -62,9 +63,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.UPDATE_INCOME);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Income incomeToUpdate = incomeService.getIncomeByUid(uid);
-        this.validateIncomeIsOwnedByUser(incomeToUpdate, userUid);
+        this.validateIncomeIsOwnedByUser(incomeToUpdate, ownerUid);
         IncomeCategory currentIncomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToUpdate.getCategoryId());
 
         UUID categoryUid = incomeUpdateRequest.getCategoryUid() == null ? currentIncomeCategory.getUid() : incomeUpdateRequest.getCategoryUid();
@@ -79,9 +81,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public void deleteIncomeByUid(UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.DELETE_INCOME);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
-        this.validateIncomeIsOwnedByUser(incomeToDelete, userUid);
+        this.validateIncomeIsOwnedByUser(incomeToDelete, ownerUid);
         incomeService.deleteIncomeById(incomeToDelete.getId());
     }
 
@@ -93,8 +96,9 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
+        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = accountService.getByUserUidAndCurrency(ownerUid, currency);
         List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
@@ -103,8 +107,9 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public List<IncomeDto> getAllIncomesByUserAndCategoryName(String categoryName) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Income> incomes = incomeService.getAllIncomesByUserUidAndCategoryName(userUid, categoryName);
+        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        List<Income> incomes = incomeService.getAllIncomesByUserUidAndCategoryName(ownerUid, categoryName);
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
@@ -112,16 +117,17 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public List<IncomeDto> getAllIncomesByUserAndDate(LocalDateTime after, LocalDateTime before) {
+        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
         if (after == null && before == null) {
             return List.of();
         }
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         List<Income> incomes =
                 after == null
-                ? incomeService.getAllIncomesByUserUidAndDateBefore(userUid, before)
+                ? incomeService.getAllIncomesByUserUidAndDateBefore(ownerUid, before)
                 : before == null
-                    ? incomeService.getAllIncomesByUserUidAndDateAfter(userUid, after)
-                : incomeService.getAllIncomesByUserUidAndDateBetween(userUid, after, before);
+                    ? incomeService.getAllIncomesByUserUidAndDateAfter(ownerUid, after)
+                : incomeService.getAllIncomesByUserUidAndDateBetween(ownerUid, after, before);
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);

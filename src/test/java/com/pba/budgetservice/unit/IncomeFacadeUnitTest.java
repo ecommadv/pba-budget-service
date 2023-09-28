@@ -66,7 +66,7 @@ public class IncomeFacadeUnitTest {
         when(incomeService.addIncome(income)).thenReturn(income);
         when(incomeDtoMapper.toIncomeDto(income, incomeCategory.getName())).thenReturn(incomeResponse);
         when(currencyService.currencyRateWithCodeExists(incomeRequest.getCurrency())).thenReturn(true);
-        when(jwtSecurityService.getCurrentUserUid()).thenReturn(account.getUserUid());
+        when(jwtSecurityService.getCurrentAccountOwnerUid()).thenReturn(account.getUserUid());
 
         // when
         IncomeDto result = incomeFacade.addIncome(incomeRequest);
