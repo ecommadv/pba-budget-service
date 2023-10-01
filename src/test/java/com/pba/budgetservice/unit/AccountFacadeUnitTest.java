@@ -49,7 +49,7 @@ public class AccountFacadeUnitTest {
         when(accountService.addAccount(account)).thenReturn(account);
         when(accountMapper.toAccountDto(account)).thenReturn(accountDto);
         when(currencyService.currencyRateWithCodeExists(accountCreateRequest.getCurrency())).thenReturn(true);
-        when(jwtSecurityService.getCurrentUserUid()).thenReturn(userUid);
+        when(jwtSecurityService.getCurrentAccountOwnerUid()).thenReturn(userUid);
 
         // when
         AccountDto result = accountFacade.createAccount(accountCreateRequest);

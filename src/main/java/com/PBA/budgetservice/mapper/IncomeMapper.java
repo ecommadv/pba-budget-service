@@ -42,4 +42,9 @@ public interface IncomeMapper {
     public IncomeCategoryDto toIncomeCategoryDto(IncomeCategory incomeCategory);
 
     public List<IncomeCategoryDto> toIncomeCategoryDto(List<IncomeCategory> incomeCategories);
+
+    @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "accountId", expression = "java(account.getId())")
+    @Mapping(target = "categoryId", expression = "java(category.getId())")
+    public Income toIncome(IncomeCategory incomeCategory, @Context Account account, @Context IncomeCategory category);
 }

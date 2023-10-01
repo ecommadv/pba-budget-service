@@ -12,6 +12,7 @@ import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeDto;
 import com.PBA.budgetservice.security.JwtSecurityService;
+import com.PBA.budgetservice.security.Permission;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.IncomeCategoryService;
@@ -20,6 +21,7 @@ import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,9 +46,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public IncomeDto addIncome(IncomeCreateRequest incomeRequest) {
+        jwtSecurityService.validateHasPermission(Permission.CREATE_INCOME);
         this.validateCurrencyCodeExists(incomeRequest.getCurrency());
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = incomeMapper.toAccount(incomeRequest, userUid);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = incomeMapper.toAccount(incomeRequest, ownerUid);
         Income income = incomeMapper.toIncome(incomeRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -61,9 +64,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public IncomeDto updateIncome(IncomeUpdateRequest incomeUpdateRequest, UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.UPDATE_INCOME);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Income incomeToUpdate = incomeService.getIncomeByUid(uid);
-        this.validateIncomeIsOwnedByUser(incomeToUpdate, userUid);
+        this.validateIncomeIsOwnedByUser(incomeToUpdate, ownerUid);
         IncomeCategory currentIncomeCategory = incomeCategoryService.getIncomeCategoryById(incomeToUpdate.getCategoryId());
 
         UUID categoryUid = incomeUpdateRequest.getCategoryUid() == null ? currentIncomeCategory.getUid() : incomeUpdateRequest.getCategoryUid();
@@ -78,9 +82,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public void deleteIncomeByUid(UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.DELETE_INCOME);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Income incomeToDelete = incomeService.getIncomeByUid(uid);
-        this.validateIncomeIsOwnedByUser(incomeToDelete, userUid);
+        this.validateIncomeIsOwnedByUser(incomeToDelete, ownerUid);
         incomeService.deleteIncomeById(incomeToDelete.getId());
     }
 
@@ -92,11 +97,12 @@ public class IncomeFacadeImpl implements IncomeFacade {
 
     @Override
     public List<IncomeDto> getAllIncomes(String categoryName, String currency, DateRange dateRange) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Income> incomes = incomeService.getAllByFilters(userUid, categoryName, currency, dateRange);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
+        List<Income> incomes = incomeService.getAllByFilters(ownerUid, categoryName, currency, dateRange);
 
-        Map<Long, String> categoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdToNameMapping);
+        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
+        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
     }
 
     private void validateCurrencyCodeExists(String code) {

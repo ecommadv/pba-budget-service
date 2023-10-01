@@ -9,6 +9,7 @@ import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.security.JwtSecurityService;
+import com.PBA.budgetservice.security.Permission;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import com.PBA.budgetservice.service.ExpenseCategoryService;
@@ -44,9 +45,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public ExpenseDto addExpense(ExpenseCreateRequest expenseCreateRequest) {
+        jwtSecurityService.validateHasPermission(Permission.CREATE_EXPENSE);
         this.validateCurrencyCodeExists(expenseCreateRequest.getCurrency());
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = expenseMapper.toAccount(expenseCreateRequest, userUid);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        Account account = expenseMapper.toAccount(expenseCreateRequest, ownerUid);
         Expense expense = expenseMapper.toExpense(expenseCreateRequest);
 
         Account savedAccount = accountService.addAccount(account);
@@ -61,9 +63,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.UPDATE_EXPENSE);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Expense expenseToUpdate = expenseService.getByUid(uid);
-        this.validateExpenseIsOwnedByUser(expenseToUpdate, userUid);
+        this.validateExpenseIsOwnedByUser(expenseToUpdate, ownerUid);
         ExpenseCategory expenseCategory = this.getUpdatedExpenseCategory(expenseUpdateRequest, expenseToUpdate);
 
         Expense updatedExpense = expenseMapper.toExpense(expenseUpdateRequest, expenseToUpdate, expenseCategory);
@@ -73,9 +76,10 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public void deleteExpenseByUid(UUID uid) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.DELETE_EXPENSE);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         Expense expenseToDelete = expenseService.getByUid(uid);
-        this.validateExpenseIsOwnedByUser(expenseToDelete, userUid);
+        this.validateExpenseIsOwnedByUser(expenseToDelete, ownerUid);
         expenseService.deleteById(expenseToDelete.getId());
     }
 
@@ -87,8 +91,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
 
     @Override
     public List<ExpenseDto> getAllUserExpenses(String expenseName, String categoryName, String currency, DateRange dateRange) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Expense> expenses = expenseService.getAll(userUid, expenseName, categoryName, currency, dateRange);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
+        jwtSecurityService.validateHasPermission(Permission.GET_EXPENSES);
+        List<Expense> expenses = expenseService.getAll(ownerUid, expenseName, categoryName, currency, dateRange);
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);

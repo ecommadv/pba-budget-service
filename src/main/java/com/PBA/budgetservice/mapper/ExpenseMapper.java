@@ -40,4 +40,9 @@ public interface ExpenseMapper {
     public ExpenseCategoryDto toExpenseCategoryDto(ExpenseCategory expenseCategory);
 
     public List<ExpenseCategoryDto> toExpenseCategoryDto(List<ExpenseCategory> expenseCategories);
+
+    @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "accountId", expression = "java(account.getId())")
+    @Mapping(target = "categoryId", expression = "java(expenseCategory.getId())")
+    public Expense toExpense(ExpenseCreateRequest expenseCreateRequest, @Context Account account, @Context ExpenseCategory expenseCategory);
 }

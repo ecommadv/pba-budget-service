@@ -9,6 +9,7 @@ import com.PBA.budgetservice.mapper.AccountMapper;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.AccountDto;
 import com.PBA.budgetservice.security.JwtSecurityService;
+import com.PBA.budgetservice.security.Permission;
 import com.PBA.budgetservice.service.AccountService;
 import com.PBA.budgetservice.service.CurrencyService;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class AccountFacadeImpl implements AccountFacade {
     private final CurrencyService currencyService;
     private final JwtSecurityService jwtSecurityService;
 
-    public AccountFacadeImpl(AccountService accountService, AccountMapper accountMapper, UserGateway userGateway, CurrencyService currencyService, JwtSecurityService jwtSecurityService) {
+    public AccountFacadeImpl(AccountService accountService, AccountMapper accountMapper, CurrencyService currencyService, JwtSecurityService jwtSecurityService) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
         this.jwtSecurityService = jwtSecurityService;
@@ -31,10 +32,11 @@ public class AccountFacadeImpl implements AccountFacade {
 
     @Override
     public AccountDto createAccount(AccountCreateRequest accountCreateRequest) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
+        jwtSecurityService.validateHasPermission(Permission.CREATE_ACCOUNT);
+        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         this.validateCurrencyCodeExists(accountCreateRequest.getCurrency());
-        this.validateAccountAlreadyExists(accountCreateRequest, userUid);
-        Account accountToCreate = accountMapper.toAccount(accountCreateRequest, userUid);
+        this.validateAccountAlreadyExists(accountCreateRequest, ownerUid);
+        Account accountToCreate = accountMapper.toAccount(accountCreateRequest, ownerUid);
 
         Account savedAccount = accountService.addAccount(accountToCreate);
         return accountMapper.toAccountDto(savedAccount);

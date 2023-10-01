@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.pba.budgetservice.mockgenerators.MockToken.MOCK_USER_ACCESS_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,7 +70,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         // given
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest(currencyRateDao.getAll());
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = UUID.randomUUID();
         this.stubUserDtoResponse(userUid);
 
@@ -95,7 +96,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         // given
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest(currencyRateDao.getAll());
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = UUID.randomUUID();
         this.stubUserDtoResponse(userUid);
         this.saveAccountWithCurrencyAndUserUid(accountCreateRequest.getCurrency(), userUid);
@@ -125,7 +126,7 @@ public class AccountControllerIntegrationTest extends BaseControllerIntegrationT
         // given
         AccountCreateRequest accountCreateRequest = AccountMockGenerator.generateMockAccountCreateRequest();
         String accountCreateRequestJSON = objectMapper.writeValueAsString(accountCreateRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = UUID.randomUUID();
         this.stubUserDtoResponse(userUid);
 

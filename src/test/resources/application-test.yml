@@ -1,3 +1,4 @@
 auth:
   base_url: http://localhost:8089
   get_user_url: http://localhost:8089/api/user
+  get_login_info_url: http://localhost:8089/api/group/login-info

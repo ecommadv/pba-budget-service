@@ -37,6 +37,7 @@ import org.springframework.util.ResourceUtils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.pba.budgetservice.mockgenerators.MockToken.MOCK_USER_ACCESS_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,7 +88,7 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         List<IncomeCategory> incomeCategoryList = incomeCategoryDao.getAll();
         IncomeCreateRequest incomeRequest = IncomeMockGenerator.generateMockIncomeCreateRequest(incomeCategoryList, currencyRateDao.getAll());
         String incomeRequestJSON = objectMapper.writeValueAsString(incomeRequest);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         UUID userUid = UUID.randomUUID();
         this.stubUserDtoResponse(userUid);
 
@@ -123,9 +124,9 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
             income.setCurrency(currency);
         });
         this.addMockIncomes(incomes);
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(userUid);
-        String getEndpoint = String.format("/income?userUid=%s&currency=%s", userUid.toString(), currency);
+        String getEndpoint = String.format("/income/currency?currency=%s", currency);
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getEndpoint)
@@ -146,9 +147,9 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
     public void testGetAllIncomesByNonexistentUserUidAndCurrency() throws Exception {
         // given
         UUID nonexistentUid = UUID.randomUUID();
-        String nonexistentCurrency = "RON";
-        String getEndpoint = String.format("/income?userUid=%s&currency=%s", nonexistentUid, nonexistentCurrency);
-        String authHeader = "Bearer token";
+        String nonexistentCurrency = "ABC";
+        String getEndpoint = String.format("/income/currency?&currency=%s", nonexistentCurrency);
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(nonexistentUid);
 
         // when
@@ -180,7 +181,7 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         String incomeUpdateRequestJSON = objectMapper.writeValueAsString(incomeUpdateRequest);
 
         Account account = accountDao.getById(savedIncome.getAccountId()).get();
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(account.getUserUid());
         String updateEndpoint = String.format("/income/%s", income.getUid().toString());
 
@@ -213,7 +214,7 @@ public class IncomeControllerIntegrationTest extends BaseControllerIntegrationTe
         Income savedIncome = incomeDao.save(income);
 
         Account account = accountDao.getById(savedIncome.getAccountId()).get();
-        String authHeader = "Bearer token";
+        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(account.getUserUid());
         String deleteEndpoint = String.format("/income/%s", savedIncome.getUid().toString());
 

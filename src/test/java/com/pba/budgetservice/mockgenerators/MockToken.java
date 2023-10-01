@@ -1,0 +1,5 @@
+package com.pba.budgetservice.mockgenerators;
+
+public class MockToken {
+    public static final String MOCK_USER_ACCESS_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlN2M2MzBhMy0wYTc0LTQ0ZjMtYWMzYS05OTYzODViZGY5NTYiLCJ0b2tlbl90eXBlIjoidXNlciIsImlhdCI6MTY5NTkwNDQyNywiZXhwIjoxNjk1OTkwODI3fQ.bF89-2mnELCbg6_3NcNvAox0662eeFc5a83RE-LB7gpRiCXYL-uQOrCmLP0UHH3hs0LXFVkrV893yVJHpO6cgQ";
+}

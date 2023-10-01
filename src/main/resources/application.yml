@@ -15,8 +15,11 @@ server:
 auth:
   base_url: http://localhost:8080
   get_user_url: http://localhost:8080/api/user
+  get_login_info_url: http://localhost:8080/api/group/login-info
 currency:
   rates:
     url: https://www.bnr.ro/nbrfxrates.xml
     scheduler:
       cron: 0 0 0 * * *
+jwt:
+  secret: gjksgAWDSAFW@!SD324%^4387dfbgSAhjklsdfALSWKJGEHADS@fhdkjsaj@UHDFUSfjdksFHBDJSDLFhhfjddzJDHF@@!ED3424edhsk3982fdhsAKJ3892
