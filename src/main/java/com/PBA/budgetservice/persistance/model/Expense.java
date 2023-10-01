@@ -23,4 +23,9 @@ public class Expense {
     private Long accountId;
     private Long categoryId;
     private LocalDateTime createdAt;
+    private Repetition repetition;
+
+    public LocalDateTime getCreatedAtFloor() {
+        return LocalDateTime.of(createdAt.getYear(), createdAt.getMonth(), createdAt.getDayOfMonth(), 0, 0, 0);
+    }
 }

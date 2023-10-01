@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller.request;
 
+import com.PBA.budgetservice.persistance.model.Repetition;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -42,4 +43,7 @@ public class IncomeCreateRequest {
     @Schema(example = "2023-11-07 18:20")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
+
+    @Schema(allowableValues = { "MONTHLY", "WEEKLY", "DAILY" }, example = "daily")
+    private Repetition repetition;
 }

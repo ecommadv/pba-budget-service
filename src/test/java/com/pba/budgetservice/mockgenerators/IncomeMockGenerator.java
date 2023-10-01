@@ -41,6 +41,7 @@ public class IncomeMockGenerator {
                 .accountId(accountId)
                 .categoryId(categoryId)
                 .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
+                .repetition(getRandomRepetition())
                 .build();
     }
 
@@ -78,6 +79,7 @@ public class IncomeMockGenerator {
                 .currency(currency)
                 .categoryUid(categoryUid)
                 .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
+                .repetition(getRandomRepetition())
                 .build();
     }
 
@@ -87,6 +89,7 @@ public class IncomeMockGenerator {
                 .description(UUID.randomUUID().toString())
                 .categoryUid(getRandomCategory(incomeCategories).getUid())
                 .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
+                .repetition(getRandomRepetition())
                 .build();
     }
 
@@ -112,5 +115,11 @@ public class IncomeMockGenerator {
         }
         Collections.shuffle(accounts);
         return accounts.get(0);
+    }
+
+    private static Repetition getRandomRepetition() {
+        List<Repetition> repetitions = new ArrayList<>(Arrays.stream(Repetition.values()).toList());
+        Collections.shuffle(repetitions);
+        return repetitions.get(0);
     }
 }

@@ -124,7 +124,7 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
 
         String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
         this.stubUserDtoResponse(userUid);
-        String getEndpoint = String.format("/expense/currency?currency=%s", currency);
+        String getEndpoint = String.format("/expense?currency=%s", currency);
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getEndpoint)
@@ -139,32 +139,6 @@ public class ExpenseControllerIntegrationTest extends BaseControllerIntegrationT
         List<UUID> expectedUids = expenses.stream().map(Expense::getUid).toList();
         List<UUID> resultedUids = expenseDtos.stream().map(ExpenseDto::getUid).toList();
         Assertions.assertEquals(expectedUids, resultedUids);
-    }
-
-    @Test
-    public void testGetAllExpensesByNonexistentUserUidAndCurrency() throws Exception {
-        // given
-        UUID nonexistentUid = UUID.randomUUID();
-        String nonexistentCurrency = "RON";
-        String getEndpoint = String.format("/expense/currency?&currency=%s", nonexistentCurrency);
-
-        String authHeader = String.format("Bearer %s", MOCK_USER_ACCESS_TOKEN);
-        this.stubUserDtoResponse(nonexistentUid);
-
-        // when
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getEndpoint)
-                        .header("Authorization", authHeader))
-                .andExpect(status().isNotFound())
-                .andReturn();
-        String responseJSON = result.getResponse().getContentAsString();
-        ApiExceptionResponse response = objectMapper.readValue(responseJSON, ApiExceptionResponse.class);
-
-        // then
-        Map<String, String> expectedErrors = Map.of(
-                ErrorCodes.ACCOUNT_NOT_FOUND,
-                String.format("Account with user uid %s and currency %s does not exist", nonexistentUid, nonexistentCurrency)
-        );
-        assertEquals(expectedErrors, response.errors());
     }
 
     @Test

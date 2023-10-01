@@ -2,6 +2,7 @@ package com.PBA.budgetservice.service;
 
 import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Income;
+import com.PBA.budgetservice.persistance.model.Repetition;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,4 +18,5 @@ public interface IncomeService {
     public Income getIncomeById(Long id);
     public List<Income> getIncomeByAccountId(Long accountId);
     public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange);
+    public List<Income> getByRepetition(Repetition repetition);
 }

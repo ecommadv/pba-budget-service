@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.persistance.model.dtos;
 
+import com.PBA.budgetservice.persistance.model.Repetition;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,4 +36,7 @@ public class ExpenseDto {
 
     @Schema(example = "2023-11-08T18:30:00")
     private LocalDateTime createdAt;
+
+    @Schema(allowableValues = { "MONTHLY", "DAILY", "NONE"}, example = "daily")
+    private Repetition repetition;
 }

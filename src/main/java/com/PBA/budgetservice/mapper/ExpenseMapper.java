@@ -20,6 +20,9 @@ public interface ExpenseMapper {
     public Account toAccount(ExpenseCreateRequest expenseCreateRequest, UUID userUid);
 
     @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "repetition", expression = "java(expenseCreateRequest.getRepetition() == null " +
+            "? com.PBA.budgetservice.persistance.model.Repetition.NONE " +
+            ": expenseCreateRequest.getRepetition())")
     public Expense toExpense(ExpenseCreateRequest expenseCreateRequest);
 
     @Mapping(target = "categoryName", expression = "java(categoryName)")
@@ -30,6 +33,9 @@ public interface ExpenseMapper {
     @Mapping(target = "description", expression = "java(expenseUpdateRequest.getDescription() == null ? expense.getDescription() : expenseUpdateRequest.getDescription())")
     @Mapping(target = "categoryId", expression = "java(expenseCategory.getId())")
     @Mapping(target = "createdAt", expression = "java(expenseUpdateRequest.getCreatedAt())")
+    @Mapping(target = "repetition", expression = "java(expenseUpdateRequest.getRepetition() == null " +
+            "? expense.getRepetition() " +
+            ": expenseUpdateRequest.getRepetition())")
     public Expense toExpense(@Context ExpenseUpdateRequest expenseUpdateRequest, Expense expense, @Context ExpenseCategory expenseCategory);
 
     @Mapping(target = "categoryName", expression = "java(categoryIdToNameMapping.get(expense.getCategoryId()))")
@@ -45,4 +51,8 @@ public interface ExpenseMapper {
     @Mapping(target = "accountId", expression = "java(account.getId())")
     @Mapping(target = "categoryId", expression = "java(expenseCategory.getId())")
     public Expense toExpense(ExpenseCreateRequest expenseCreateRequest, @Context Account account, @Context ExpenseCategory expenseCategory);
+
+    @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "repetition", expression = "java(com.PBA.budgetservice.persistance.model.Repetition.NONE)")
+    public Expense toScheduledExpense(Expense expense);
 }

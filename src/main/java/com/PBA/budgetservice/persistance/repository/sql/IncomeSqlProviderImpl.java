@@ -16,15 +16,16 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
                     uid,
                     account_id,
                     category_id,
-                    created_at
-                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?);
+                    created_at,
+                    repetition
+                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?);
                 """;
     }
 
     @Override
     public String selectById() {
         return """
-                SELECT id, amount, description, currency, uid, account_id, category_id, created_at
+                SELECT id, amount, description, currency, uid, account_id, category_id, created_at, repetition
                 FROM income
                 WHERE
                     id = ?
@@ -50,7 +51,7 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
     public String update() {
         return """
                 UPDATE income
-                SET amount = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?, created_at = ?
+                SET amount = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?, created_at = ?, repetition = ?
                 WHERE id = ?
                """;
     }
@@ -58,7 +59,7 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
     @Override
     public String selectByUid() {
         return """
-                SELECT id, amount, description, currency, uid, account_id, category_id, created_at
+                SELECT id, amount, description, currency, uid, account_id, category_id, created_at, repetition
                 FROM income
                 WHERE
                     uid = ?
@@ -92,6 +93,15 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
                     (:dateAfter is null OR income.created_at >= :dateAfter)
                     AND
                     (:dateBefore is null OR income.created_at <= :dateBefore)
+               """;
+    }
+
+    @Override
+    public String selectByRepetition() {
+        return """
+               SELECT *
+               FROM income
+               WHERE repetition = ?
                """;
     }
 }

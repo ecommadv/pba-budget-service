@@ -2,10 +2,7 @@ package com.pba.budgetservice.mockgenerators;
 
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
 import com.PBA.budgetservice.controller.request.ExpenseUpdateRequest;
-import com.PBA.budgetservice.persistance.model.Account;
-import com.PBA.budgetservice.persistance.model.CurrencyRate;
-import com.PBA.budgetservice.persistance.model.Expense;
-import com.PBA.budgetservice.persistance.model.ExpenseCategory;
+import com.PBA.budgetservice.persistance.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,6 +44,7 @@ public class ExpenseMockGenerator {
                 .accountId(accountId)
                 .categoryId(categoryId)
                 .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
+                .repetition(getRandomRepetition())
                 .build();
     }
 
@@ -127,5 +125,11 @@ public class ExpenseMockGenerator {
         }
         Collections.shuffle(accounts);
         return accounts.get(0);
+    }
+
+    private static Repetition getRandomRepetition() {
+        List<Repetition> repetitions = new ArrayList<>(Arrays.stream(Repetition.values()).toList());
+        Collections.shuffle(repetitions);
+        return repetitions.get(0);
     }
 }
