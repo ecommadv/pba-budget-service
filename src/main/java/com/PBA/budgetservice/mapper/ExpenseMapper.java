@@ -29,6 +29,7 @@ public interface ExpenseMapper {
     @Mapping(target = "name", expression = "java(expenseUpdateRequest.getName() == null ? expense.getName() : expenseUpdateRequest.getName())")
     @Mapping(target = "description", expression = "java(expenseUpdateRequest.getDescription() == null ? expense.getDescription() : expenseUpdateRequest.getDescription())")
     @Mapping(target = "categoryId", expression = "java(expenseCategory.getId())")
+    @Mapping(target = "createdAt", expression = "java(expenseUpdateRequest.getCreatedAt())")
     public Expense toExpense(@Context ExpenseUpdateRequest expenseUpdateRequest, Expense expense, @Context ExpenseCategory expenseCategory);
 
     @Mapping(target = "categoryName", expression = "java(categoryIdToNameMapping.get(expense.getCategoryId()))")

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -20,4 +21,5 @@ public class Income {
     private UUID uid;
     private Long accountId;
     private Long categoryId;
+    private LocalDateTime createdAt;
 }

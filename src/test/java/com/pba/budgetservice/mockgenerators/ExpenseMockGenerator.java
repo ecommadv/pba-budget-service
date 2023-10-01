@@ -8,6 +8,10 @@ import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +46,7 @@ public class ExpenseMockGenerator {
                 .uid(UUID.randomUUID())
                 .accountId(accountId)
                 .categoryId(categoryId)
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 
@@ -79,6 +84,7 @@ public class ExpenseMockGenerator {
                 .description(UUID.randomUUID().toString())
                 .currency(currency)
                 .categoryUid(categoryUid)
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 
@@ -95,6 +101,7 @@ public class ExpenseMockGenerator {
                 .name(UUID.randomUUID().toString())
                 .description(UUID.randomUUID().toString())
                 .categoryUid(expenseCategoryUids.stream().findFirst().get())
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 

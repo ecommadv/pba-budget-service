@@ -24,6 +24,7 @@ public interface IncomeMapper {
             expression = "java(incomeUpdateRequest.getAmount() == null ? income.getAmount() : incomeUpdateRequest.getAmount())")
     @Mapping(target = "description",
             expression = "java(incomeUpdateRequest.getDescription() == null ? income.getDescription() : incomeUpdateRequest.getDescription())")
+    @Mapping(target = "createdAt", expression = "java(incomeUpdateRequest.getCreatedAt())")
     public Income toIncome(@Context IncomeUpdateRequest incomeUpdateRequest, Income income);
 
     public Account toAccount(IncomeCreateRequest incomeRequest, UUID userUid);

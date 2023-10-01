@@ -15,15 +15,16 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
                     currency,
                     uid,
                     account_id,
-                    category_id
-                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?);
+                    category_id,
+                    created_at
+                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?);
                 """;
     }
 
     @Override
     public String selectById() {
         return """
-                SELECT id, amount, name, description, currency, uid, account_id, category_id
+                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at
                 FROM expense
                 WHERE
                     id = ?
@@ -49,7 +50,7 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
     public String update() {
         return """
                 UPDATE expense
-                SET amount = ?, name = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?
+                SET amount = ?, name = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?, created_at = ?
                 WHERE id = ?
                """;
     }
@@ -57,7 +58,7 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
     @Override
     public String selectByUid() {
         return """
-                SELECT id, amount, name, description, currency, uid, account_id, category_id
+                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at
                 FROM expense
                 WHERE
                     uid = ?

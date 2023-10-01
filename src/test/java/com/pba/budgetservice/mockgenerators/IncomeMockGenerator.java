@@ -5,6 +5,8 @@ import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.persistance.model.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +40,7 @@ public class IncomeMockGenerator {
                 .uid(UUID.randomUUID())
                 .accountId(accountId)
                 .categoryId(categoryId)
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 
@@ -74,6 +77,7 @@ public class IncomeMockGenerator {
                 .description(UUID.randomUUID().toString())
                 .currency(currency)
                 .categoryUid(categoryUid)
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 
@@ -82,6 +86,7 @@ public class IncomeMockGenerator {
                 .amount(BigDecimal.valueOf(new Random().nextDouble()))
                 .description(UUID.randomUUID().toString())
                 .categoryUid(getRandomCategory(incomeCategories).getUid())
+                .createdAt(LocalDateTime.of(LocalDate.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(), 0, 0, 0))
                 .build();
     }
 
