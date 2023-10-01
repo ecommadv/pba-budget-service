@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.service;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Income;
 
 import java.time.LocalDateTime;
@@ -15,9 +16,5 @@ public interface IncomeService {
     public Income deleteIncomeById(Long id);
     public Income getIncomeById(Long id);
     public List<Income> getIncomeByAccountId(Long accountId);
-    public List<Income> getAllIncomesByUserUidAndFilter(UUID userUid, Function<Income, Boolean> filterFct);
-    public List<Income> getAllIncomesByUserUidAndCategoryName(UUID userUid, String categoryName);
-    public List<Income> getAllIncomesByUserUidAndDateBefore(UUID userUid, LocalDateTime before);
-    public List<Income> getAllIncomesByUserUidAndDateAfter(UUID userUid, LocalDateTime after);
-    public List<Income> getAllIncomesByUserUidAndDateBetween(UUID userUid, LocalDateTime after, LocalDateTime before);
+    public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange);
 }

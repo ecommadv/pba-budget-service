@@ -1,12 +1,12 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.gateway.UserGateway;
 import com.PBA.budgetservice.mapper.IncomeMapper;
 import com.PBA.budgetservice.persistance.model.Account;
-import com.PBA.budgetservice.persistance.model.Expense;
 import com.PBA.budgetservice.persistance.model.Income;
 import com.PBA.budgetservice.persistance.model.IncomeCategory;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
@@ -20,7 +20,6 @@ import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -92,39 +91,12 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency) {
+    public List<IncomeDto> getAllIncomes(String categoryName, String currency, DateRange dateRange) {
         UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
-        List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
+        List<Income> incomes = incomeService.getAllByFilters(userUid, categoryName, currency, dateRange);
 
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
-    }
-
-    @Override
-    public List<IncomeDto> getAllIncomesByUserAndCategoryName(String categoryName) {
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Income> incomes = incomeService.getAllIncomesByUserUidAndCategoryName(userUid, categoryName);
-
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
-    }
-
-    @Override
-    public List<IncomeDto> getAllIncomesByUserAndDate(LocalDateTime after, LocalDateTime before) {
-        if (after == null && before == null) {
-            return List.of();
-        }
-        UUID userUid = jwtSecurityService.getCurrentUserUid();
-        List<Income> incomes =
-                after == null
-                ? incomeService.getAllIncomesByUserUidAndDateBefore(userUid, before)
-                : before == null
-                    ? incomeService.getAllIncomesByUserUidAndDateAfter(userUid, after)
-                : incomeService.getAllIncomesByUserUidAndDateBetween(userUid, after, before);
-
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
+        Map<Long, String> categoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
+        return incomeMapper.toIncomeDto(incomes, categoryIdToNameMapping);
     }
 
     private void validateCurrencyCodeExists(String code) {
