@@ -16,15 +16,16 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
                     uid,
                     account_id,
                     category_id,
-                    created_at
-                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?);
+                    created_at,
+                    repetition
+                ) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """;
     }
 
     @Override
     public String selectById() {
         return """
-                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at
+                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at, repetition
                 FROM expense
                 WHERE
                     id = ?
@@ -50,7 +51,7 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
     public String update() {
         return """
                 UPDATE expense
-                SET amount = ?, name = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?, created_at = ?
+                SET amount = ?, name = ?, description = ?, currency = ?, uid = ?, account_id = ?, category_id = ?, created_at = ?, repetition = ?
                 WHERE id = ?
                """;
     }
@@ -58,7 +59,7 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
     @Override
     public String selectByUid() {
         return """
-                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at
+                SELECT id, amount, name, description, currency, uid, account_id, category_id, created_at, repetition
                 FROM expense
                 WHERE
                     uid = ?
@@ -94,6 +95,15 @@ public class ExpenseSqlProviderImpl implements ExpenseSqlProvider {
                     (:dateAfter is null OR expense.created_at >= :dateAfter)
                     AND
                     (:dateBefore is null OR expense.created_at <= :dateBefore)
+               """;
+    }
+
+    @Override
+    public String selectByRepetition() {
+        return """
+               SELECT *
+               FROM expense
+               WHERE repetition = ?
                """;
     }
 }

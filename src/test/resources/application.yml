@@ -17,7 +17,8 @@ auth:
 currency:
   rates:
     url: https://www.bnr.ro/nbrfxrates.xml
-    scheduler:
-      cron: 0 0 0 * * *
+scheduler:
+  currency_rate_cron: 0 0 0 * * *
+  repetition_cron: 0 0 0 * * *
 jwt:
   secret: gjksgAWDSAFW@!SD324%^4387dfbgSAhjklsdfALSWKJGEHADS@fhdkjsaj@UHDFUSfjdksFHBDJSDLFhhfjddzJDHF@@!ED3424edhsk3982fdhsAKJ3892

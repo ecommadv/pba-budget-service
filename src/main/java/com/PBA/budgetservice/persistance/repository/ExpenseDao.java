@@ -2,6 +2,7 @@ package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Expense;
+import com.PBA.budgetservice.persistance.model.Repetition;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,5 @@ public interface ExpenseDao {
     public Optional<Expense> getByUid(UUID uid);
     public List<Expense> getAllByUserUid(UUID userUid);
     public List<Expense> getAllByFilters(UUID userUid, String name, String categoryName, String currency, DateRange dateRange);
+    public List<Expense> getByRepetition(Repetition repetition);
 }

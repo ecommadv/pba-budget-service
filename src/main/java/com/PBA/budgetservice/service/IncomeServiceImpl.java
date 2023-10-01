@@ -6,6 +6,7 @@ import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.Income;
+import com.PBA.budgetservice.persistance.model.Repetition;
 import com.PBA.budgetservice.persistance.repository.AccountDao;
 import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
@@ -75,5 +76,10 @@ public class IncomeServiceImpl implements IncomeService {
     @Override
     public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange) {
         return incomeDao.getAllByFilters(userUid, categoryName, currency, dateRange);
+    }
+
+    @Override
+    public List<Income> getByRepetition(Repetition repetition) {
+        return incomeDao.getByRepetition(repetition);
     }
 }

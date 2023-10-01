@@ -156,6 +156,7 @@ public class IncomeDaoUnitTest {
                 newIncome.getAccountId(),
                 newIncome.getCategoryId(),
                 newIncome.getCreatedAt(),
+                newIncome.getRepetition().name(),
                 newIncome.getId())).thenReturn(1);
 
         // when
@@ -182,6 +183,7 @@ public class IncomeDaoUnitTest {
                 absentIncome.getAccountId(),
                 absentIncome.getCategoryId(),
                 absentIncome.getCreatedAt(),
+                absentIncome.getRepetition().name(),
                 absentIncome.getId())).thenReturn(0);
 
         assertThatThrownBy(() -> incomeDao.update(absentIncome, id))

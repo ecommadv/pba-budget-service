@@ -12,7 +12,9 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class JdbcRepository<ObjectT, IdT> {
     private final RowMapper<ObjectT> rowMapper;
@@ -27,7 +29,7 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         this.utilsFactory = utilsFactory;
     }
 
-    public ObjectT save(ObjectT obj) {
+    public ObjectT save(ObjectT obj, BiFunction<Integer, Object, Object> fieldProvider) {
         String sql = sqlProvider.insert();
         List<Object> attributes = extractAttributes(obj);
         KeyHolder keyHolder = utilsFactory.keyHolder();
@@ -37,7 +39,8 @@ public abstract class JdbcRepository<ObjectT, IdT> {
                     Statement.RETURN_GENERATED_KEYS);
             int index = 1;
             for (Object field : attributes) {
-                ps.setObject(index++, field);
+                ps.setObject(index, fieldProvider.apply(index, field));
+                index++;
             }
             return ps;
         }, keyHolder);
@@ -45,6 +48,14 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         Map<String, Object> objectMap = keyHolder.getKeys();
         Object id = objectMap.get("id");
         return getById((IdT) id).get();
+    }
+
+    public ObjectT save(ObjectT obj) {
+        return this.save(obj, (index, field) -> field);
+    }
+
+    public ObjectT save(ObjectT obj, Map<Integer, Object> fieldMapping) {
+        return this.save(obj, fieldMapping::getOrDefault);
     }
 
     public Optional<ObjectT> getById(IdT id) {
@@ -71,11 +82,12 @@ public abstract class JdbcRepository<ObjectT, IdT> {
         return obj.get();
     }
 
-    public ObjectT update(ObjectT obj, IdT id) throws BudgetDaoException {
+    public ObjectT update(ObjectT obj, IdT id, BiFunction<Integer, Object, Object> fieldProvider) throws BudgetDaoException {
         String sql = sqlProvider.update();
         List<Object> args = extractAttributes(obj);
-        args.add(id);
-        int rowCount = jdbcTemplate.update(sql, args.toArray());
+        List<Object> convertedArgs = IntStream.range(0, args.size()).mapToObj(i -> fieldProvider.apply(i+1, args.get(i))).collect(Collectors.toList());
+        convertedArgs.add(id);
+        int rowCount = jdbcTemplate.update(sql, convertedArgs.toArray());
         if (rowCount == 0) {
             throw new BudgetDaoException(
                     String.format("Object with id %s is not stored!", id.toString()),
@@ -84,6 +96,14 @@ public abstract class JdbcRepository<ObjectT, IdT> {
             );
         }
         return obj;
+    }
+
+    public ObjectT update(ObjectT obj, IdT id) throws BudgetDaoException {
+        return this.update(obj, id, (index, field) -> field);
+    }
+
+    public ObjectT update(ObjectT obj, IdT id, Map<Integer, Object> fieldMapping) throws BudgetDaoException {
+        return this.update(obj, id, fieldMapping::getOrDefault);
     }
 
     private List<Object> extractAttributes(Object obj) {

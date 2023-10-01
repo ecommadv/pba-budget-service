@@ -1,7 +1,7 @@
 package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.controller.request.DateRange;
-import com.PBA.budgetservice.persistance.model.Expense;
+import com.PBA.budgetservice.persistance.model.Repetition;
 import com.PBA.budgetservice.persistance.repository.mappers.IncomeRowMapper;
 import com.PBA.budgetservice.persistance.repository.sql.IncomeSqlProvider;
 import com.PBA.budgetservice.persistance.model.Income;
@@ -11,9 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.List;
 
 @Repository
 public class IncomeDaoImpl extends JdbcRepository<Income, Long> implements IncomeDao {
@@ -37,6 +38,22 @@ public class IncomeDaoImpl extends JdbcRepository<Income, Long> implements Incom
     }
 
     @Override
+    public Income save(Income income) {
+        Object repetitionField = income.getRepetition().name();
+        Integer repetitionIndex = 8;
+        Map<Integer, Object> fieldMapping = Map.of(repetitionIndex, repetitionField);
+        return super.save(income, fieldMapping);
+    }
+
+    @Override
+    public Income update(Income income, Long id) {
+        Object repetitionField = income.getRepetition().name();
+        Integer repetitionIndex = 8;
+        Map<Integer, Object> fieldMapping = Map.of(repetitionIndex, repetitionField);
+        return super.update(income, id, fieldMapping);
+    }
+
+    @Override
     public List<Income> getAllByUserUid(UUID userUid) {
         String sql = incomeSqlProvider.selectByUserUid();
         return jdbcTemplate.query(sql, incomeRowMapper, userUid);
@@ -50,6 +67,12 @@ public class IncomeDaoImpl extends JdbcRepository<Income, Long> implements Incom
                 mapSqlParameterSource(userUid, categoryName, currency, dateRange),
                 incomeRowMapper
         );
+    }
+
+    @Override
+    public List<Income> getByRepetition(Repetition repetition) {
+        String sql = incomeSqlProvider.selectByRepetition();
+        return jdbcTemplate.query(sql, incomeRowMapper, repetition.name());
     }
 
     private MapSqlParameterSource mapSqlParameterSource(UUID userUid, String categoryName, String currency, DateRange dateRange) {

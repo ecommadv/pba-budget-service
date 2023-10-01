@@ -27,7 +27,7 @@ public class CurrencySchedulerImpl implements CurrencyScheduler {
     }
 
     @Override
-    @Scheduled(cron = "${currency.rates.scheduler.cron}")
+    @Scheduled(cron = "${scheduler.currency_rate_cron}")
     @Transactional
     public void reloadCurrencyRates() {
         LOGGER.info("Currency rates reload scheduler triggered at {}", LocalDateTime.now());

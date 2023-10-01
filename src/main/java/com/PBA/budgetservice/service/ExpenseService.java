@@ -2,6 +2,7 @@ package com.PBA.budgetservice.service;
 
 import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Expense;
+import com.PBA.budgetservice.persistance.model.Repetition;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,4 +14,5 @@ public interface ExpenseService {
     public List<Expense> getAll();
     public Expense deleteById(Long id);
     public List<Expense> getAll(UUID userUid, String name, String categoryName, String currency, DateRange dateRange);
+    public List<Expense> getByRepetition(Repetition repetition);
 }

@@ -1,6 +1,7 @@
 package com.PBA.budgetservice.persistance.repository;
 
 import com.PBA.budgetservice.controller.request.DateRange;
+import com.PBA.budgetservice.persistance.model.Repetition;
 import com.PBA.budgetservice.persistance.repository.mappers.ExpenseRowMapper;
 import com.PBA.budgetservice.persistance.repository.sql.ExpenseSqlProvider;
 import com.PBA.budgetservice.persistance.model.Expense;
@@ -9,10 +10,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public class ExpenseDaoImpl extends JdbcRepository<Expense, Long> implements Exp
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ExpenseDaoImpl(ExpenseRowMapper rowMapper, ExpenseSqlProvider sqlProvider, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, UtilsFactory utilsFactory) {
+    public ExpenseDaoImpl(ExpenseRowMapper rowMapper, ExpenseSqlProvider sqlProvider, JdbcTemplate jdbcTemplate, UtilsFactory utilsFactory, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(rowMapper, sqlProvider, jdbcTemplate, utilsFactory);
         this.expenseRowMapper = rowMapper;
         this.expenseSqlProvider = sqlProvider;
@@ -35,6 +35,22 @@ public class ExpenseDaoImpl extends JdbcRepository<Expense, Long> implements Exp
     public Optional<Expense> getByUid(UUID uid) {
         String sql = expenseSqlProvider.selectByUid();
         return jdbcTemplate.query(sql, expenseRowMapper, uid).stream().findFirst();
+    }
+
+    @Override
+    public Expense save(Expense expense) {
+        Object repetitionField = expense.getRepetition().name();
+        Integer repetitionIndex = 9;
+        Map<Integer, Object> fieldMapping = Map.of(repetitionIndex, repetitionField);
+        return super.save(expense, fieldMapping);
+    }
+
+    @Override
+    public Expense update(Expense expense, Long id) {
+        Object repetitionField = expense.getRepetition().name();
+        Integer repetitionIndex = 9;
+        Map<Integer, Object> fieldMapping = Map.of(repetitionIndex, repetitionField);
+        return super.update(expense, id, fieldMapping);
     }
 
     @Override
@@ -51,6 +67,12 @@ public class ExpenseDaoImpl extends JdbcRepository<Expense, Long> implements Exp
                 mapSqlParameterSource(userUid, name, categoryName, currency, dateRange),
                 expenseRowMapper
         );
+    }
+
+    @Override
+    public List<Expense> getByRepetition(Repetition repetition) {
+        String sql = expenseSqlProvider.selectByRepetition();
+        return jdbcTemplate.query(sql, expenseRowMapper, repetition.name());
     }
 
     private MapSqlParameterSource mapSqlParameterSource(UUID userUid, String name, String categoryName, String currency, DateRange dateRange) {

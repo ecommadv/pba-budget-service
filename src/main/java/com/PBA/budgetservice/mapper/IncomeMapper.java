@@ -18,6 +18,9 @@ import java.util.UUID;
 @Mapper
 public interface IncomeMapper {
     @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "repetition", expression = "java(incomeRequest.getRepetition() == null " +
+            "? com.PBA.budgetservice.persistance.model.Repetition.NONE " +
+            ": incomeRequest.getRepetition())")
     public Income toIncome(IncomeCreateRequest incomeRequest);
 
     @Mapping(target = "amount",
@@ -25,6 +28,9 @@ public interface IncomeMapper {
     @Mapping(target = "description",
             expression = "java(incomeUpdateRequest.getDescription() == null ? income.getDescription() : incomeUpdateRequest.getDescription())")
     @Mapping(target = "createdAt", expression = "java(incomeUpdateRequest.getCreatedAt())")
+    @Mapping(target = "repetition", expression = "java(incomeUpdateRequest.getRepetition() == null " +
+            "? income.getRepetition() " +
+            ": incomeUpdateRequest.getRepetition())")
     public Income toIncome(@Context IncomeUpdateRequest incomeUpdateRequest, Income income);
 
     public Account toAccount(IncomeCreateRequest incomeRequest, UUID userUid);
@@ -47,4 +53,8 @@ public interface IncomeMapper {
     @Mapping(target = "accountId", expression = "java(account.getId())")
     @Mapping(target = "categoryId", expression = "java(category.getId())")
     public Income toIncome(IncomeCategory incomeCategory, @Context Account account, @Context IncomeCategory category);
+
+    @Mapping(target = "uid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "repetition", expression = "java(com.PBA.budgetservice.persistance.model.Repetition.NONE)")
+    public Income toScheduledIncome(Income income);
 }

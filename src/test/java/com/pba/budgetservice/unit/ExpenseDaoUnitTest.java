@@ -157,6 +157,7 @@ public class ExpenseDaoUnitTest {
                 newExpense.getAccountId(),
                 newExpense.getCategoryId(),
                 newExpense.getCreatedAt(),
+                newExpense.getRepetition().name(),
                 newExpense.getId())).thenReturn(1);
 
         // when
@@ -184,6 +185,7 @@ public class ExpenseDaoUnitTest {
                 absentExpense.getAccountId(),
                 absentExpense.getCategoryId(),
                 absentExpense.getCreatedAt(),
+                absentExpense.getRepetition().name(),
                 absentExpense.getId())).thenReturn(0);
 
         assertThatThrownBy(() -> expenseDao.update(absentExpense, id))

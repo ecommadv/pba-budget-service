@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.persistance.repository.mappers;
 
+import com.PBA.budgetservice.persistance.model.Repetition;
 import com.PBA.budgetservice.persistance.model.Expense;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class ExpenseRowMapperImpl implements ExpenseRowMapper {
                 .accountId(rs.getLong("account_id"))
                 .categoryId(rs.getLong("category_id"))
                 .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                .repetition(Repetition.valueOf(rs.getString("repetition")))
                 .build();
     }
 }
