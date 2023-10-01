@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
@@ -20,7 +21,6 @@ import com.PBA.budgetservice.persistance.model.Account;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
@@ -98,7 +99,7 @@ public class IncomeFacadeImpl implements IncomeFacade {
     public List<IncomeDto> getAllIncomes(String categoryName, String currency, DateRange dateRange) {
         UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
         jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
-        List<Income> incomes = incomeService.getAllByFilters(userUid, categoryName, currency, dateRange);
+        List<Income> incomes = incomeService.getAllByFilters(ownerUid, categoryName, currency, dateRange);
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
