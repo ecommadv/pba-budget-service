@@ -64,4 +64,34 @@ public class IncomeSqlProviderImpl implements IncomeSqlProvider {
                     uid = ?
                 """;
     }
+
+    @Override
+    public String selectByUserUid() {
+        return """
+                SELECT income.*
+                FROM income
+                    INNER JOIN account ON income.account_id = account.id
+                WHERE user_uid = ?
+                """;
+    }
+
+    @Override
+    public String selectByFilters() {
+        return """
+               SELECT income.*
+               FROM income
+                    INNER JOIN account ON income.account_id = account.id
+                    INNER JOIN income_category ON income.category_id = income_category.id
+               WHERE
+                    (:userUid is null OR user_uid = :userUid)
+                    AND
+                    (:categoryName is null OR income_category.name = :categoryName)
+                    AND
+                    (:currency is null OR income.currency = :currency)
+                    AND
+                    (:dateAfter is null OR income.created_at >= :dateAfter)
+                    AND
+                    (:dateBefore is null OR income.created_at <= :dateBefore)
+               """;
+    }
 }

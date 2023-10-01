@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.facade.ExpenseFacade;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,12 +34,6 @@ public class ExpenseControllerImpl implements ExpenseController {
     }
 
     @Override
-    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserAndCurrency(String currency) {
-        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpensesByUserAndCurrency(currency);
-        return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<Void> deleteExpense(UUID uid) {
         expenseFacade.deleteExpenseByUid(uid);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -52,20 +46,8 @@ public class ExpenseControllerImpl implements ExpenseController {
     }
 
     @Override
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByName(String name) {
-        List<ExpenseDto> expenses = expenseFacade.getAllUserExpensesByName(name);
-        return new ResponseEntity<>(expenses, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByCategoryName(String categoryName) {
-        List<ExpenseDto> expenses = expenseFacade.getAllUserExpensesByCategoryName(categoryName);
-        return new ResponseEntity<>(expenses, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByDate(LocalDateTime after, LocalDateTime before) {
-        List<ExpenseDto> expenses = expenseFacade.getAllExpensesByUserAndDate(after, before);
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpenses(String expenseName, String categoryName, String currency, DateRange dateRange) {
+        List<ExpenseDto> expenses = expenseFacade.getAllUserExpenses(expenseName, categoryName, currency, dateRange);
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 }

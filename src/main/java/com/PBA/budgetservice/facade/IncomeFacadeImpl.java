@@ -95,39 +95,10 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency) {
-        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
+    public List<IncomeDto> getAllIncomes(String categoryName, String currency, DateRange dateRange) {
         UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
-        Account account = accountService.getByUserUidAndCurrency(ownerUid, currency);
-        List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
-
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
-    }
-
-    @Override
-    public List<IncomeDto> getAllIncomesByUserAndCategoryName(String categoryName) {
         jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
-        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
-        List<Income> incomes = incomeService.getAllIncomesByUserUidAndCategoryName(ownerUid, categoryName);
-
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
-    }
-
-    @Override
-    public List<IncomeDto> getAllIncomesByUserAndDate(LocalDateTime after, LocalDateTime before) {
-        jwtSecurityService.validateHasPermission(Permission.GET_INCOMES);
-        if (after == null && before == null) {
-            return List.of();
-        }
-        UUID ownerUid = jwtSecurityService.getCurrentAccountOwnerUid();
-        List<Income> incomes =
-                after == null
-                ? incomeService.getAllIncomesByUserUidAndDateBefore(ownerUid, before)
-                : before == null
-                    ? incomeService.getAllIncomesByUserUidAndDateAfter(ownerUid, after)
-                : incomeService.getAllIncomesByUserUidAndDateBetween(ownerUid, after, before);
+        List<Income> incomes = incomeService.getAllByFilters(userUid, categoryName, currency, dateRange);
 
         Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
         return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);

@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
@@ -36,13 +37,6 @@ public interface ExpenseController {
     public ResponseEntity<ExpenseDto> updateExpense(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to update")
                                                     @Valid @RequestBody ExpenseUpdateRequest expenseUpdateRequest,
                                                     @PathVariable("uid") UUID uid);
-    @Operation(summary = "Provides a list of all the expenses with the specified user uid and currency that are currently stored in the system.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
-    @GetMapping("/currency")
-    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserAndCurrency(@RequestParam(name = "currency") String currency);
 
     @Operation(summary = "Deletes the expense with the given uid from the system, if it exists.")
     @ApiResponses(value = {
@@ -60,26 +54,14 @@ public interface ExpenseController {
     @GetMapping("/category")
     public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories();
 
-    @Operation(summary = "Provides a list of all the expenses corresponding to a logged in user, filtered by expense name.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK")
-    })
-    @GetMapping("/name")
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByName(@RequestParam(name = "name") String name);
-
-    @Operation(summary = "Provides a list of all the expenses corresponding to a logged in user, filtered by currency category name.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK")
-    })
-    @GetMapping("/category-name")
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByCategoryName(@RequestParam(name = "name") String categoryName);
-
-    @Operation(summary = "Provides a list of all the expenses corresponding to a logged in user, filtered by date.")
+    @Operation(summary = "Provides a list of all the (filtered) expenses corresponding to the logged in user/group.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "400", description = "Bad Request")
     })
-    @GetMapping("/date")
-    public ResponseEntity<List<ExpenseDto>> getAllUserExpensesByDate(@RequestParam(name = "after", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime after,
-                                                                     @RequestParam(name = "before", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime before);
+    @GetMapping
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpenses(@RequestParam(name = "name", required = false) String expenseName,
+                                                               @RequestParam(name = "category-name", required = false) String categoryName,
+                                                               @RequestParam(name = "currency", required = false) String currency,
+                                                               DateRange dateRange);
 }

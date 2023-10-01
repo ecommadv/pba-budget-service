@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.service;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
 import com.PBA.budgetservice.persistance.model.Account;
@@ -72,50 +73,7 @@ public class IncomeServiceImpl implements IncomeService {
     }
 
     @Override
-    public List<Income> getAllIncomesByUserUidAndFilter(UUID userUid, Function<Income, Boolean> filterFct) {
-        Set<Long> accountIds = this.getAccountIdsByUserUid(userUid);
-        return incomeDao
-                .getAll()
-                .stream()
-                .filter(income -> accountIds.contains(income.getAccountId()) && filterFct.apply(income))
-                .toList();
-    }
-
-    @Override
-    public List<Income> getAllIncomesByUserUidAndCategoryName(UUID userUid, String categoryName) {
-        Map<Long, String> incomeCategoryIdToName = this.getCategoryIdToNameMapping();
-        return this.getAllIncomesByUserUidAndFilter(userUid, income -> incomeCategoryIdToName.get(income.getCategoryId()).equals(categoryName));
-    }
-
-    @Override
-    public List<Income> getAllIncomesByUserUidAndDateBefore(UUID userUid, LocalDateTime before) {
-        return this.getAllIncomesByUserUidAndFilter(userUid, income -> income.getCreatedAt().isBefore(before));
-    }
-
-    @Override
-    public List<Income> getAllIncomesByUserUidAndDateAfter(UUID userUid, LocalDateTime after) {
-        return this.getAllIncomesByUserUidAndFilter(userUid, income -> income.getCreatedAt().isAfter(after));
-    }
-
-    @Override
-    public List<Income> getAllIncomesByUserUidAndDateBetween(UUID userUid, LocalDateTime after, LocalDateTime before) {
-        return this.getAllIncomesByUserUidAndFilter(userUid, income -> income.getCreatedAt().isBefore(before)
-                && income.getCreatedAt().isAfter(after));
-    }
-
-    private Set<Long> getAccountIdsByUserUid(UUID userUid) {
-        return accountDao
-                .getAll()
-                .stream()
-                .filter(account -> account.getUserUid().equals(userUid))
-                .map(Account::getId)
-                .collect(Collectors.toSet());
-    }
-
-    private Map<Long, String> getCategoryIdToNameMapping() {
-        return expenseCategoryDao
-                .getAll()
-                .stream()
-                .collect(Collectors.toMap(ExpenseCategory::getId, ExpenseCategory::getName));
+    public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange) {
+        return incomeDao.getAllByFilters(userUid, categoryName, currency, dateRange);
     }
 }
