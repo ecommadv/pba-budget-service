@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
@@ -85,10 +86,9 @@ public class ExpenseFacadeImpl implements ExpenseFacade {
     }
 
     @Override
-    public List<ExpenseDto> getAllExpensesByUserAndCurrency(String currency) {
+    public List<ExpenseDto> getAllUserExpenses(String expenseName, String categoryName, String currency, DateRange dateRange) {
         UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
-        List<Expense> expenses = expenseService.getByAccountId(account.getId());
+        List<Expense> expenses = expenseService.getAll(userUid, expenseName, categoryName, currency, dateRange);
 
         Map<Long, String> categoryIdToNameMapping = expenseCategoryService.getIdToNameMapping();
         return expenseMapper.toExpenseDto(expenses, categoryIdToNameMapping);

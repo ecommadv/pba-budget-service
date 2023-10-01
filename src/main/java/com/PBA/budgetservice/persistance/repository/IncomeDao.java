@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.persistance.repository;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Income;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface IncomeDao {
     public Income deleteById(Long id);
     public Income update(Income income, Long id);
     public Optional<Income> getByUid(UUID uid);
+    public List<Income> getAllByUserUid(UUID userUid);
+    public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange);
 }

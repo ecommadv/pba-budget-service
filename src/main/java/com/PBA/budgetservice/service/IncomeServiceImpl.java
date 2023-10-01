@@ -1,22 +1,31 @@
 package com.PBA.budgetservice.service;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
+import com.PBA.budgetservice.persistance.model.Account;
+import com.PBA.budgetservice.persistance.model.ExpenseCategory;
 import com.PBA.budgetservice.persistance.model.Income;
+import com.PBA.budgetservice.persistance.repository.AccountDao;
+import com.PBA.budgetservice.persistance.repository.ExpenseCategoryDao;
 import com.PBA.budgetservice.persistance.repository.IncomeDao;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class IncomeServiceImpl implements IncomeService {
     private final IncomeDao incomeDao;
+    private final AccountDao accountDao;
+    private final ExpenseCategoryDao expenseCategoryDao;
 
-    public IncomeServiceImpl(IncomeDao incomeDao) {
+    public IncomeServiceImpl(IncomeDao incomeDao, AccountDao accountDao, ExpenseCategoryDao expenseCategoryDao) {
         this.incomeDao = incomeDao;
+        this.accountDao = accountDao;
+        this.expenseCategoryDao = expenseCategoryDao;
     }
 
     @Override
@@ -61,5 +70,10 @@ public class IncomeServiceImpl implements IncomeService {
                 .stream()
                 .filter(income -> Objects.equals(income.getAccountId(), accountId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Income> getAllByFilters(UUID userUid, String categoryName, String currency, DateRange dateRange) {
+        return incomeDao.getAllByFilters(userUid, categoryName, currency, dateRange);
     }
 }

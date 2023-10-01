@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.exceptions.AuthorizationException;
 import com.PBA.budgetservice.exceptions.EntityNotFoundException;
 import com.PBA.budgetservice.exceptions.ErrorCodes;
@@ -90,13 +91,12 @@ public class IncomeFacadeImpl implements IncomeFacade {
     }
 
     @Override
-    public List<IncomeDto> getAllIncomesByUserAndCurrency(String currency) {
+    public List<IncomeDto> getAllIncomes(String categoryName, String currency, DateRange dateRange) {
         UUID userUid = jwtSecurityService.getCurrentUserUid();
-        Account account = accountService.getByUserUidAndCurrency(userUid, currency);
-        List<Income> incomes = incomeService.getIncomeByAccountId(account.getId());
+        List<Income> incomes = incomeService.getAllByFilters(userUid, categoryName, currency, dateRange);
 
-        Map<Long, String> categoryIdNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
-        return incomeMapper.toIncomeDto(incomes, categoryIdNameMapping);
+        Map<Long, String> categoryIdToNameMapping = incomeCategoryService.getIncomeCategoryIdToNameMapping();
+        return incomeMapper.toIncomeDto(incomes, categoryIdToNameMapping);
     }
 
     private void validateCurrencyCodeExists(String code) {

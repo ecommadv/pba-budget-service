@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.service;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.Expense;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface ExpenseService {
     public Expense updateExpense(Expense expense);
     public List<Expense> getAll();
     public Expense deleteById(Long id);
-    public List<Expense> getByAccountId(Long accountId);
+    public List<Expense> getAll(UUID userUid, String name, String categoryName, String currency, DateRange dateRange);
 }

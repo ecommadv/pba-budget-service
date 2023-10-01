@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.facade.ExpenseFacade;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
@@ -33,12 +34,6 @@ public class ExpenseControllerImpl implements ExpenseController {
     }
 
     @Override
-    public ResponseEntity<List<ExpenseDto>> getAllExpensesByUserAndCurrency(String currency) {
-        List<ExpenseDto> expenseDtos = expenseFacade.getAllExpensesByUserAndCurrency(currency);
-        return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<Void> deleteExpense(UUID uid) {
         expenseFacade.deleteExpenseByUid(uid);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -48,5 +43,11 @@ public class ExpenseControllerImpl implements ExpenseController {
     public ResponseEntity<List<ExpenseCategoryDto>> getAllExpenseCategories() {
         List<ExpenseCategoryDto> expenseCategoryDtos = expenseFacade.getAllExpenseCategories();
         return new ResponseEntity<>(expenseCategoryDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<ExpenseDto>> getAllUserExpenses(String expenseName, String categoryName, String currency, DateRange dateRange) {
+        List<ExpenseDto> expenses = expenseFacade.getAllUserExpenses(expenseName, categoryName, currency, dateRange);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 }

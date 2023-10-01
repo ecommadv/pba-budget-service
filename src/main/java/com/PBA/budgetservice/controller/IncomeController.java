@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.persistance.model.dtos.IncomeCategoryDto;
@@ -26,14 +27,6 @@ public interface IncomeController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Income to create")
             @Valid @RequestBody IncomeCreateRequest incomeRequest);
 
-    @Operation(summary = "Provides a list of all the incomes with the specified user uid and currency that are currently stored in the system.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "404", description = "Not Found")
-    })
-    @GetMapping
-    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserAndCurrency(@RequestParam("currency") String currency);
-
     @Operation(summary = "Updates an income and persists the changes in the system.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK")
@@ -58,4 +51,14 @@ public interface IncomeController {
     })
     @GetMapping("/category")
     public ResponseEntity<List<IncomeCategoryDto>> getAllIncomeCategories();
+
+    @Operation(summary = "Provides a list of all the (filtered) incomes corresponding to the logged in user/group.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
+    @GetMapping
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomes(@RequestParam(name = "category-name", required = false) String categoryName,
+                                                             @RequestParam(name = "currency", required = false) String currency,
+                                                             DateRange dateRange);
 }

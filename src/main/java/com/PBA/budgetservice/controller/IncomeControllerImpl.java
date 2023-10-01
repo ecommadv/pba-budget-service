@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.controller;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.controller.request.IncomeCreateRequest;
 import com.PBA.budgetservice.controller.request.IncomeUpdateRequest;
 import com.PBA.budgetservice.facade.IncomeFacade;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,12 +30,6 @@ public class IncomeControllerImpl implements IncomeController {
     }
 
     @Override
-    public ResponseEntity<List<IncomeDto>> getAllIncomesByUserAndCurrency(String currency) {
-        List<IncomeDto> incomeDtos = incomeFacade.getAllIncomesByUserAndCurrency(currency);
-        return new ResponseEntity<>(incomeDtos, HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<IncomeDto> updateIncome(IncomeUpdateRequest updateIncomeRequest, UUID uid) {
         IncomeDto incomeDto = incomeFacade.updateIncome(updateIncomeRequest, uid);
         return new ResponseEntity<>(incomeDto, HttpStatus.OK);
@@ -49,5 +45,11 @@ public class IncomeControllerImpl implements IncomeController {
     public ResponseEntity<List<IncomeCategoryDto>> getAllIncomeCategories() {
         List<IncomeCategoryDto> incomeCategoryDtos = incomeFacade.getAllIncomeCategories();
         return new ResponseEntity<>(incomeCategoryDtos, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<IncomeDto>> getAllUserIncomes(String categoryName, String currency, DateRange dateRange) {
+        List<IncomeDto> incomes = incomeFacade.getAllIncomes(categoryName, currency, dateRange);
+        return new ResponseEntity<>(incomes, HttpStatus.OK);
     }
 }

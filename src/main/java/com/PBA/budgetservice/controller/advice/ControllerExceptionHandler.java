@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -29,6 +30,16 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiExceptionResponse handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
         return new ApiExceptionResponse(ZonedDateTime.now(), Map.of(ErrorCodes.HTTP_MESSAGE_NOT_READABLE, exception.getMessage()));
+    }
+
+    // handle exception thrown when user request params are invalid (for example: when requested LocalDateTime params do not match pattern)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ApiExceptionResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        return new ApiExceptionResponse(ZonedDateTime.now(), Map.of(
+                ErrorCodes.INVALID_ARGS_TYPE,
+                "One or more arguments do not match required type and/or pattern")
+        );
     }
 
     @ExceptionHandler(BudgetException.class)

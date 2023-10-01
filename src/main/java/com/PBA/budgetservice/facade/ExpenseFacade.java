@@ -1,5 +1,6 @@
 package com.PBA.budgetservice.facade;
 
+import com.PBA.budgetservice.controller.request.DateRange;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseCategoryDto;
 import com.PBA.budgetservice.persistance.model.dtos.ExpenseDto;
 import com.PBA.budgetservice.controller.request.ExpenseCreateRequest;
@@ -13,5 +14,5 @@ public interface ExpenseFacade {
     public ExpenseDto updateExpense(ExpenseUpdateRequest expenseUpdateRequest, UUID uid);
     public void deleteExpenseByUid(UUID uid);
     public List<ExpenseCategoryDto> getAllExpenseCategories();
-    public List<ExpenseDto> getAllExpensesByUserAndCurrency(String currency);
+    public List<ExpenseDto> getAllUserExpenses(String name, String categoryName, String currency, DateRange dateRange);
 }
