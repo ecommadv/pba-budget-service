@@ -11,4 +11,5 @@ public interface CurrencyRateDao {
     public List<CurrencyRate> getAll();
     public long deleteById(String id);
     public long update(CurrencyRate currencyRate, String id);
+    public Optional<CurrencyRate> getByCode(String code);
 }

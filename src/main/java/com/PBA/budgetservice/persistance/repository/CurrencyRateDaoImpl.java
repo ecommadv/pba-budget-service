@@ -71,6 +71,13 @@ public class CurrencyRateDaoImpl implements CurrencyRateDao {
         return matchedCount;
     }
 
+    @Override
+    public Optional<CurrencyRate> getByCode(String code) {
+        Query query = new Query()
+                .addCriteria((Criteria.where("code")).is(code));
+        return mongoTemplate.find(query, CurrencyRate.class).stream().findFirst();
+    }
+
     private void throwNotFoundException(String id) {
         throw new BudgetDaoException(
                 String.format("Currency rate with id %s does not exist", id),

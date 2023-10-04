@@ -36,6 +36,7 @@ public class CurrencySchedulerImpl implements CurrencyScheduler {
         Map<String, BigDecimal> exchangeRatesMapping = currencyGateway.getCurrencyExchangeRatesMapping();
         List<CurrencyRate> currencyRates = this.getListOfCurrencyRatesFromMapping(exchangeRatesMapping);
         currencyRates.forEach(currencyService::addCurrencyRate);
+        this.addRonCurrency();
     }
 
     private List<CurrencyRate> getListOfCurrencyRatesFromMapping(Map<String, BigDecimal> exchangeRatesMapping) {
@@ -53,5 +54,13 @@ public class CurrencySchedulerImpl implements CurrencyScheduler {
                 .code(code)
                 .mainValue(ronValue)
                 .build();
+    }
+
+    private void addRonCurrency() {
+        CurrencyRate ronCurrency = CurrencyRate.builder()
+                .code("RON")
+                .mainValue(BigDecimal.valueOf(1))
+                .build();
+        currencyService.addCurrencyRate(ronCurrency);
     }
 }
