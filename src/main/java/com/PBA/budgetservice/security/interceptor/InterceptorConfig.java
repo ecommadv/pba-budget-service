@@ -8,7 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class InterceptorConfig implements WebMvcConfigurer {
     private static final String EXPENSE_CATEGORY_ENDPOINT = "/expense/category";
     private static final String INCOME_CATEGORY_ENDPOINT = "/income/category";
-    private static final String[] EXCLUDED_ENDPOINTS = {EXPENSE_CATEGORY_ENDPOINT, INCOME_CATEGORY_ENDPOINT};
+    private static final String CURRENCY_CONVERSION_ENDPOINT = "/currency/convert";
+    private static final String[] EXCLUDED_ENDPOINTS = {EXPENSE_CATEGORY_ENDPOINT, INCOME_CATEGORY_ENDPOINT, CURRENCY_CONVERSION_ENDPOINT};
     private final JwtHeaderHandlerInterceptor jwtHeaderHandlerInterceptor;
 
     public InterceptorConfig(JwtHeaderHandlerInterceptor jwtHeaderHandlerInterceptor) {
